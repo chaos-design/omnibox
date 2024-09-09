@@ -1,0 +1,20 @@
+.footerContainer {
+  .footer {
+    .footerModule {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .module {
+      }
+    }
+
+    .footerSource {
+      margin-top: 16px;
+
+      .source {
+        margin-right: 2px;
+      }
+    }
+  }
+}
