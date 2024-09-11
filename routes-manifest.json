@@ -1,0 +1,86 @@
+{
+  "routeAssets": {
+    "code/diff/page": {
+      "chunkIds": [
+        "369",
+        "666"
+      ],
+      "assets": [
+        "/static/js/async/369.08522dc6.js",
+        "/static/js/async/code/diff/page.999a9190.js",
+        "/static/css/async/code/diff/page.1e63af9b.css"
+      ],
+      "referenceCssAssets": [
+        "/static/css/async/code/diff/page.1e63af9b.css"
+      ]
+    },
+    "code/format/page": {
+      "chunkIds": [
+        "563",
+        "369",
+        "548",
+        "931"
+      ],
+      "assets": [
+        "/static/js/lib-antd.4af415a3.js",
+        "/static/js/async/369.08522dc6.js",
+        "/static/js/async/548.f143f0bf.js",
+        "/static/js/async/code/format/page.29b43e34.js",
+        "/static/css/async/code/format/page.0cd46b23.css"
+      ],
+      "referenceCssAssets": [
+        "/static/css/async/code/format/page.0cd46b23.css"
+      ]
+    },
+    "json/stringify-parse/page": {
+      "chunkIds": [
+        "563",
+        "369",
+        "205",
+        "805"
+      ],
+      "assets": [
+        "/static/js/lib-antd.4af415a3.js",
+        "/static/js/async/369.08522dc6.js",
+        "/static/js/async/205.9af8edf4.js",
+        "/static/js/async/json/stringify-parse/page.51adc75f.js",
+        "/static/css/async/json/stringify-parse/page.10301ecf.css"
+      ],
+      "referenceCssAssets": [
+        "/static/css/async/json/stringify-parse/page.10301ecf.css"
+      ]
+    },
+    "main": {
+      "chunkIds": [
+        "242",
+        "563",
+        "361",
+        "126",
+        "118",
+        "98",
+        "909"
+      ],
+      "assets": [
+        "/static/js/lib-antd.4af415a3.js",
+        "/static/js/lib-react.a911a824.js",
+        "/static/js/lib-polyfill.e5f871b2.js",
+        "/static/js/lib-router.e82a0fc8.js",
+        "/static/js/98.53f49684.js",
+        "/static/js/main.2a7fb1f6.js",
+        "/static/css/main.f680a2fd.css"
+      ],
+      "referenceCssAssets": [
+        "/static/css/main.f680a2fd.css"
+      ]
+    },
+    "page": {
+      "chunkIds": [
+        "484"
+      ],
+      "assets": [
+        "/static/js/async/page.fa9233ec.js"
+      ],
+      "referenceCssAssets": []
+    }
+  }
+}
