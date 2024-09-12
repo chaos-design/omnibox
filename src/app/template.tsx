@@ -2,11 +2,8 @@
 
 import React, { useState } from 'react';
 
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-} from '@ant-design/icons';
-import { ConfigProvider, Button, Layout, Menu, theme } from 'antd';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { ConfigProvider, Button, Layout, Menu, theme, Space } from 'antd';
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -17,7 +14,8 @@ import themeConfig from './themeConfig';
 
 import s from './index.module.scss';
 import Toolbar from '../components/toolbar';
-import { AppConfig, AppConfigParams } from '../utils/config/app';
+import type { AppConfigParams } from '../utils/config/app';
+import { AppConfig } from '../utils/config/app';
 import { MonacoEditor } from '../utils/config/editor';
 
 import { menu } from '../utils/menu';
@@ -79,6 +77,20 @@ export default function Template({
                 />
                 <div className={s.slogan}>Chaos</div>
               </div>
+
+              <Space>
+                <Button
+                  type="link"
+                  onClick={() => {
+                    window.open(
+                      'https://github.com/chaos-design/omnibox',
+                      '_blank',
+                    );
+                  }}
+                >
+                  GitHub
+                </Button>
+              </Space>
             </Header>
             <Layout>
               <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -103,16 +115,6 @@ export default function Template({
                 </div>
               </Sider>
               <Layout>
-                {/* <Header style={{ padding: 0, background: colorBgContainer }}>
-              <Button
-                type="text"
-                icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                onClick={() => setCollapsed(!collapsed)}
-                style={{
-                  fontSize: '16px',
-                }}
-              />
-            </Header> */}
                 <Content
                   style={{
                     margin: 16,
@@ -122,9 +124,6 @@ export default function Template({
                     borderRadius: borderRadiusLG,
                   }}
                 >
-                  {/* <div className={s.contentHeader}>
-                    <Toolbar />
-                  </div> */}
                   {children}
                 </Content>
                 <Footer

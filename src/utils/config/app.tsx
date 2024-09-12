@@ -6,7 +6,9 @@ export interface AppConfigParams {
 
 export interface AppConfigProps extends AppConfigParams {
   language?: string;
-  setAppConfig: React.Dispatch<React.SetStateAction<Partial<AppConfigParams> | undefined>>
+  setAppConfig: React.Dispatch<
+    React.SetStateAction<Partial<AppConfigParams> | undefined>
+  >;
 }
 
 export const AppConfig = createContext<AppConfigProps | undefined>(undefined);
@@ -15,9 +17,7 @@ export const useAppConfig = () => {
   const context = useContext(AppConfig);
 
   if (!context) {
-    throw new Error(
-      'useAppConfig must be used within an AppConfig.Provider',
-    );
+    throw new Error('useAppConfig must be used within an AppConfig.Provider');
   }
 
   return context;

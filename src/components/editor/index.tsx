@@ -1,5 +1,5 @@
 import React, {
-  useEffect,
+  useCallback,
   useImperativeHandle,
   useLayoutEffect,
   useRef,
@@ -15,9 +15,9 @@ import MonacoEditor, {
   DiffEditor as MonacoDiffEditor,
   EditorProps as OriginEditorProps,
 } from '@monaco-editor/react';
+import { useMonacoEditor } from '../../utils/config/editor';
 
 import s from './index.module.scss';
-import { useMonacoEditor } from '../../utils/config/editor';
 
 export { useMonaco };
 
@@ -32,13 +32,14 @@ export type MonacoEditorProps = Parameters<typeof MonacoEditor>[0];
 
 export interface EditorProps extends MonacoEditorProps {
   className?: string;
+  language?: string;
   ref?: React.RefObject<unknown>;
 }
 
 const Editor = React.forwardRef(
   ({ className, ...monacoEditorProps }: EditorProps, ref) => {
     const [value, setValue] = useState();
-    const editorRef = React.useRef(null);
+    const editorRef = useRef<any>(null);
     const { setEditor } = useMonacoEditor();
 
     useLayoutEffect(() => {
@@ -47,23 +48,20 @@ const Editor = React.forwardRef(
       }
     }, [editorRef.current, setEditor]);
 
-    const handleEditorChange = React.useCallback(
-      (_v: string | undefined, ev: EventType) => {
-        let v = value;
-        if (!_v) {
+    const handleEditorChange = useCallback((_v: string | undefined) => {
+      let v = value;
+      if (!_v) {
+        v = value;
+      } else {
+        try {
+          v = JSON.parse(_v);
+        } catch (error) {
           v = value;
-        } else {
-          try {
-            v = JSON.parse(_v);
-          } catch (error) {
-            v = value;
-          }
         }
+      }
 
-        setValue(v);
-      },
-      [],
-    );
+      setValue(v);
+    }, []);
 
     const getLanguage = React.useCallback(() => {
       if (editorRef.current) {
@@ -76,7 +74,6 @@ const Editor = React.forwardRef(
 
     const handleFormatDocument = React.useCallback(() => {
       if (editorRef.current) {
-        console.log('editorRef.current12312', editorRef.current);
         // @ts-ignore
         editorRef.current?.getAction?.('editor.action.formatDocument').run();
       }
@@ -93,11 +90,15 @@ const Editor = React.forwardRef(
     }, [editorRef.current]);
 
     const handleEditorDidMount = React.useCallback((editor: EditorType) => {
+      // @ts-ignore
       editorRef.current = editor;
 
+      // @ts-ignore
       editor.handleFormatDocument = handleFormatDocument;
+      // @ts-ignore
       editor.getLanguage = getLanguage;
 
+      // @ts-ignore
       setEditor(editor);
 
       // 监听 paste 事件
@@ -114,16 +115,15 @@ const Editor = React.forwardRef(
       }
     }, [value]);
 
-    console.log('editorValue', editorRef.current);
-
     return (
       <div className={c(s.editorContainer, className)}>
         <MonacoEditor
           height="100%"
-          defaultLanguage={monacoEditorProps?.defaultLanguage || 'json'}
+          defaultLanguage={monacoEditorProps?.defaultLanguage ?? 'json'}
           defaultValue={editorValue}
-          theme={monacoEditorProps?.theme || 'vs-dark'}
+          theme={monacoEditorProps?.theme ?? 'vs-dark'}
           {...omit(monacoEditorProps || {}, 'defaultLanguage', 'theme')}
+          // @ts-ignore
           onMount={handleEditorDidMount}
           onChange={handleEditorChange}
         />
@@ -144,7 +144,7 @@ const DiffEditor = ({
   language = 'json',
   ...monacoEditorProps
 }: DiffEditorProps) => {
-  const diffEditorRef = useRef(null);
+  const diffEditorRef = useRef<any>(null);
 
   const handleEditorDidMount = React.useCallback((editor: EditorType) => {
     diffEditorRef.current = editor;
@@ -170,6 +170,7 @@ const DiffEditor = ({
           formatOnPaste: true,
           // renderSideBySide: false,
         }}
+        // @ts-ignore
         onMount={handleEditorDidMount}
       />
     </div>

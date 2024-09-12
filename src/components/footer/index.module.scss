@@ -2,10 +2,19 @@
   .footer {
     .footerModule {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
 
       .module {
+        .moduleTitle {
+          margin-bottom: 8px;
+        }
+
+        .moduleContent {
+          display: flex;
+          justify-content: center;
+          gap: 10px;
+        }
       }
     }
 

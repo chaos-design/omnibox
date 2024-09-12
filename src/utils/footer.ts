@@ -17,6 +17,14 @@ export const footerConfig = {
           title: 'Study Notes',
           url: 'https://rain120.github.io/study-notes',
         },
+        {
+          title: 'Typescript Guide',
+          url: 'https://rain120.github.io/athena/',
+        },
+        {
+          title: 'Athena',
+          url: 'https://rain120.github.io/typescript-guide/',
+        },
       ],
     },
     {
@@ -24,7 +32,7 @@ export const footerConfig = {
       list: [
         {
           icon: '',
-          title: 'Github',
+          title: 'Rain120',
           url: 'https://github.com/Rain120',
         },
       ],

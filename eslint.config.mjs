@@ -4,6 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import js from '@eslint/js';
 import { FlatCompat } from '@eslint/eslintrc';
+import { config } from 'node:process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,7 +14,7 @@ const compat = new FlatCompat({
   allConfig: js.configs.all,
 });
 
-export default [
+const config = [
   {
     ignores: ['menu.mjs'],
   },
@@ -47,7 +48,7 @@ export default [
 
       quotes: [
         'error',
-        'double',
+        'single',
         {
           avoidEscape: true,
         },
@@ -67,3 +68,5 @@ export default [
     },
   },
 ];
+
+export default config;
