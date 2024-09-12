@@ -65,17 +65,19 @@ export default function Template({
               }}
             >
               <div className={s.logoContainer}>
-                <Image
-                  width={44}
-                  height={44}
-                  src="https://rain120.github.io/study-notes/img/chao.png"
-                  alt=""
-                  loader={() =>
-                    'https://rain120.github.io/study-notes/img/chao.png'
-                  }
-                  className={s.logo}
-                />
-                <div className={s.slogan}>Chaos</div>
+                <Link href="/">
+                  <Image
+                    width={44}
+                    height={44}
+                    src="https://rain120.github.io/study-notes/img/chao.png"
+                    alt=""
+                    loader={() =>
+                      'https://rain120.github.io/study-notes/img/chao.png'
+                    }
+                    className={s.logo}
+                  />
+                  <div className={s.slogan}>Chaos</div>
+                </Link>
               </div>
 
               <Space>
