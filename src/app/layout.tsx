@@ -7,8 +7,16 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Toolset',
+  title: 'Omnibox',
   description: 'Anything you can imagine, we can build it',
+  icons: {
+    icon: '/favicon.ico',
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+  },
 };
 
 const RootLayout = ({ children }: Readonly<React.PropsWithChildren>) => (
