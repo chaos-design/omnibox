@@ -1,8 +1,9 @@
+'use client';
+
 import type { ThemeConfig } from 'antd';
 
 const theme: ThemeConfig = {
-  token: {
-  },
+  token: {},
 };
 
 export default theme;

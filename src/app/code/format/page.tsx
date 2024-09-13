@@ -2,13 +2,19 @@
 
 import React, { useRef, useState } from 'react';
 
+import prettier from 'prettier/standalone';
+import parserBabel from 'prettier/parser-babel';
+import prettierPluginEstree from 'prettier/plugins/estree';
+import prettierPluginHtml from 'prettier/plugins/html';
+
 import { Editor, EditorType } from '../../../components/editor';
 import Toolbar from '../../../components/toolbar';
 
-import s from './index.module.scss';
 import { Button, Space } from 'antd';
 import { useMonacoEditor } from '../../../utils/config/editor';
 import { useAppConfig } from '../../../utils/config/app';
+
+import s from './index.module.scss';
 
 export default function Page() {
   const { editor } = useMonacoEditor();
@@ -29,7 +35,18 @@ export default function Page() {
         <Button
           size="middle"
           type="primary"
-          onClick={() => {
+          onClick={async () => {
+            console.log('editor', editor.getValue(), appConfig);
+            if (editor?.getValue?.()) {
+              await prettier.format(editor.getValue(), {
+                parser: 'html',
+                plugins: [
+                  // parserBabel,
+                  // prettierPluginEstree,
+                  prettierPluginHtml,
+                ],
+              });
+            }
             editor.handleFormatDocument();
           }}
         >

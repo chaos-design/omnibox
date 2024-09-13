@@ -41,6 +41,7 @@ export const menu = MENU_PATH_DATA.map((m) => {
   return {
     ...c,
     ...omit(m, 'path'),
+    key: c.path || m.key,
     label: c.path ? <Link href={c.path}>{c.label}</Link> : c.label,
     children: m.children?.map((mc) => {
       const _mc = MENU_INFO[mc.label] ?? {};
@@ -48,6 +49,7 @@ export const menu = MENU_PATH_DATA.map((m) => {
       return {
         ..._mc,
         ...mc,
+        key: mc.path,
         label: <Link href={mc.path}>{_mc.label}</Link>,
       };
     }),

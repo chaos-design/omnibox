@@ -6,6 +6,8 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { ConfigProvider, Button, Layout, Menu, theme, Space } from 'antd';
 
 import Link from 'next/link';
+import { usePathname, useSearchParams } from 'next/navigation';
+
 import Image from 'next/image';
 
 import FooterContent from '../components/footer';
@@ -20,12 +22,15 @@ import { MonacoEditor } from '../utils/config/editor';
 
 import { menu } from '../utils/menu';
 
+// console.log('menu', menu);
+
 const { Header, Sider, Content, Footer } = Layout;
 
 export default function Template({
   // @ts-ignore
   children,
 }) {
+  const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [appConfig, setAppConfig] = useState<
     Partial<AppConfigParams> | undefined
@@ -65,14 +70,20 @@ export default function Template({
               }}
             >
               <div className={s.logoContainer}>
-                <Link href="/">
+                <Link
+                  href="/"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
                   <Image
                     width={44}
                     height={44}
                     src="https://rain120.github.io/study-notes/img/chao.png"
                     alt=""
-                    loader={() =>
-                      'https://rain120.github.io/study-notes/img/chao.png'
+                    loader={({ src, width, quality }) =>
+                      `https://rain120.github.io/study-notes/img/chao.png?w=${width}&q=${quality || 75}`
                     }
                     className={s.logo}
                   />
@@ -100,7 +111,8 @@ export default function Template({
                   mode="inline"
                   theme="dark"
                   defaultOpenKeys={menu.map((m) => m.key)}
-                  inlineCollapsed={false}
+                  // inlineCollapsed={false}
+                  selectedKeys={[pathname]}
                   items={menu}
                 />
                 <div className={s.menuOp}>
