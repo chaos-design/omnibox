@@ -126,14 +126,14 @@ export function chinesePunctuationToEnglish(
     '？': '?',
     '：': ':',
     '；': ';',
-    '“': escape ? '\\\"' : '"',
-    '”': escape ? '\\\"' : '"',
-    '‘': escape ? '\\\'' : "'",
-    '’': escape ? '\\\'' : "'",
-    '（': escape ? '\\\(' : '(',
-    '）': escape ? '\\\)' : ')',
-    '【': escape ? '\\\[' : '[',
-    '】': escape ? '\\\]' : ']',
+    '“': escape ? '\\"' : '"',
+    '”': escape ? '\\"' : '"',
+    '‘': escape ? "\\'" : "'",
+    '’': escape ? "\\'" : "'",
+    '（': escape ? '\\(' : '(',
+    '）': escape ? '\\)' : ')',
+    '【': escape ? '\\[' : '[',
+    '】': escape ? '\\]' : ']',
     '—': '-',
     '…': '...',
   };
@@ -142,4 +142,35 @@ export function chinesePunctuationToEnglish(
     .split('')
     .map((char) => punctuationMap[char] || char)
     .join('');
+}
+
+/**
+ * 将给定的字符串转换为 JSON 格式
+ * @param str 待转换的字符串
+ * @returns 转换后的 JSON 字符串
+ */
+export function convert2JSON(str: string) {
+  let jsonValue = str;
+
+  try {
+    eval(`window.omnibox_convert_json= ${str}`);
+
+    jsonValue = JSON.stringify((window as any).omnibox_convert_json);
+  } catch (error) {}
+
+  return jsonValue;
+}
+
+/**
+ * 判断给定的字符串是否为有效的 JSON 格式
+ * @param str 待判断的字符串
+ * @returns 如果字符串是有效的 JSON 格式，返回 true；否则返回 false
+ */
+export function isJSON(str: string) {
+  try {
+    JSON.parse(str);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }

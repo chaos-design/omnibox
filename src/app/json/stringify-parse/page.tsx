@@ -9,17 +9,18 @@ import { Space, Button, ButtonProps } from 'antd';
 import { useMonacoEditor } from '../../../utils/config/editor';
 import * as json from '../../../utils/tools/json';
 
-import s from './index.module.scss';
 import { copyToClipboard } from '../../../utils/tools/copy';
 import { storageStringifyParseValue } from '../../../utils/storage/json';
 
+import s from './index.module.scss';
+
 const demoText = `{
-  "name": "John Doe",
-  "text": "Line1\\nLine2\\tTabbed",
-  "info": {
-    "age": 30,
+  "Name": "Rai120",
+  "Github": "https://github.com/rain120",
+  "Info": {
+    "age": 20,
     "active": true,
-    "description": "他说：“你好，世界！”"
+    "description": "😊他说：“你好，世界！”"
   }
 }`;
 
@@ -39,7 +40,7 @@ enum OperateType {
 export default function Page() {
   const { editor } = useMonacoEditor();
   // console.log('editorRef', editorRef.current, editor);
-  const cache = storageStringifyParseValue()
+  const cache = storageStringifyParseValue();
 
   useEffect(() => {
     const value = editor?.getValue();
@@ -60,6 +61,10 @@ export default function Page() {
   const handleOperate = useCallback(
     (type: OperateType) => {
       const value = editor?.getValue();
+
+      if (!json.isJSON(value)) {
+        editor.setValue(json.convert2JSON(value));
+      }
 
       switch (type) {
         case OperateType.format:
