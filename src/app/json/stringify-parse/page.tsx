@@ -45,7 +45,7 @@ enum OperateType {
 
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
 
-export function Content() {
+const Content = () => {
   const { editor } = useMonacoEditor();
   // console.log('editorRef', editorRef.current, editor);
   const cache = storageStringifyParseValue();
@@ -228,7 +228,7 @@ export function Content() {
       />
     </div>
   );
-}
+};
 
 export default function Page() {
   const [activeKey, setActiveKey] = useState('tab_1');
