@@ -287,13 +287,7 @@ export default function Page() {
         });
         return;
       }
-
-      Modal.confirm({
-        title: '是否清空内容!',
-        onOk() {
-          remove(targetKey);
-        },
-      });
+      remove(targetKey);
     }
   };
 
