@@ -10,7 +10,7 @@ import React, {
 
 import { Editor } from '../../../components/editor';
 
-import { Space, Button, ButtonProps, Tabs, Modal } from 'antd';
+import { Space, Button, ButtonProps, Tabs, Modal, notification } from 'antd';
 
 import { useMonacoEditor } from '../../../utils/config/editor';
 import * as json from '../../../utils/tools/json';
@@ -281,6 +281,13 @@ export default function Page() {
     if (action === 'add') {
       add();
     } else {
+      if (items.length === 1) {
+        notification.info({
+          message: '至少保留一个Tab!',
+        });
+        return;
+      }
+
       Modal.confirm({
         title: '是否清空内容!',
         onOk() {
