@@ -5,6 +5,9 @@ export const getStorageKey = (key: string) =>
 
 export const storageTools = (key: string) => {
   return {
+    getStorageKey() {
+      return getStorageKey(key);
+    },
     getItem() {
       const value = localStorage.getItem(key);
       if (value) {

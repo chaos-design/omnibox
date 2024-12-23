@@ -2,4 +2,20 @@
   height: 100%;
 
   display: flex;
+
+  .editor {
+    width: calc(100% - 158px);
+  }
+}
+
+.pageTabsContainer {
+  height: 100%;
+
+  :global {
+    .ant-tabs,
+    .ant-tabs-content,
+    .ant-tabs-tabpane {
+      height: 100%;
+    }
+  }
 }

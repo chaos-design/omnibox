@@ -34,10 +34,19 @@ export interface EditorProps extends MonacoEditorProps {
   className?: string;
   language?: string;
   ref?: React.RefObject<unknown>;
+
+  onEditorChange?: (v?: string) => void;
 }
 
 const Editor = React.forwardRef(
-  ({ className, ...monacoEditorProps }: EditorProps, ref) => {
+  (
+    {
+      className,
+      onEditorChange = (v?: string) => {},
+      ...monacoEditorProps
+    }: EditorProps,
+    ref,
+  ) => {
     const [value, setValue] = useState();
     const editorRef = useRef<any>(null);
     const { setEditor } = useMonacoEditor();
@@ -61,6 +70,7 @@ const Editor = React.forwardRef(
       }
 
       setValue(v);
+      onEditorChange(_v);
     }, []);
 
     const getLanguage = React.useCallback(() => {

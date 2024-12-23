@@ -39,7 +39,7 @@ const App: React.FC = () => {
       </Typography>
       <Row gutter={16}>
         {features.map((feature, index) => (
-          <Col span={24 / features.length}>
+          <Col key={index} span={24 / features.length}>
             <Card
               bordered={false}
               title={
