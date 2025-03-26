@@ -47,8 +47,10 @@ export default function Template({
 
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      event.returnValue = '';
+      if (pathname !== '/') {
+        event.preventDefault();
+        event.returnValue = '';
+      }
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);

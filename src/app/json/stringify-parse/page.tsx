@@ -10,7 +10,15 @@ import React, {
 
 import { Editor } from '../../../components/editor';
 
-import { Space, Button, ButtonProps, Tabs, Modal, notification } from 'antd';
+import {
+  Space,
+  Button,
+  ButtonProps,
+  Tabs,
+  Modal,
+  notification,
+  TabsProps,
+} from 'antd';
 
 import { useMonacoEditor } from '../../../utils/config/editor';
 import * as json from '../../../utils/tools/json';
@@ -45,13 +53,13 @@ enum OperateType {
 
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
 
-const Content = () => {
+const Content = ({ activeKey }: { activeKey: string }) => {
   const { editor } = useMonacoEditor();
   // console.log('editorRef', editorRef.current, editor);
-  const cache = storageStringifyParseValue();
+  const cache = storageStringifyParseValue(activeKey);
 
   useEffect(() => {
-    const value = editor?.getValue();
+    const value = editor?.getValue(cache.getStorageKey());
 
     if (value) {
       cache.setItem(value);
@@ -231,10 +239,18 @@ const Content = () => {
 };
 
 export default function Page() {
-  const [activeKey, setActiveKey] = useState('tab_1');
-  const [items, setItems] = useState([
-    { label: 'Tab 1', children: <Content />, key: 'tab_1' },
-  ]);
+  const cacheTabs = storageStringifyParseValue('tabs');
+  let fistTab: any[] = [{ label: 'Tab 1', key: 'tab_1' }];
+
+  try {
+    if (cacheTabs.getItem()) {
+      fistTab = JSON.parse(cacheTabs.getItem());
+    }
+  } catch (error) {
+    fistTab = [{ label: 'Tab 1', key: 'tab_1' }];
+  }
+  const [activeKey, setActiveKey] = useState(fistTab?.[0]?.key || 'tab_1');
+  const [items, setItems] = useState(fistTab);
   const newTabIndex = useRef(0);
   const contentRef = useRef(null);
 
@@ -247,11 +263,13 @@ export default function Page() {
     const newPanes = [...items];
     newPanes.push({
       label: 'New Tab',
-      children: <Content />,
+      // children: <Content activeKey={newActiveKey} />,
       key: newActiveKey,
     });
     setItems(newPanes);
     setActiveKey(newActiveKey);
+
+    cacheTabs.setItem(JSON.stringify(newPanes));
   };
 
   const remove = (targetKey: TargetKey) => {
@@ -272,6 +290,7 @@ export default function Page() {
     }
     setItems(newPanes);
     setActiveKey(newActiveKey);
+    cacheTabs.setItem(JSON.stringify(newPanes));
   };
 
   const onEdit = (
@@ -298,7 +317,11 @@ export default function Page() {
         onChange={onChange}
         activeKey={activeKey}
         onEdit={onEdit}
-        items={items}
+        items={items.map((item) => ({
+          label: item.label,
+          key: item.key,
+          children: <Content activeKey={item.key} />,
+        }))}
       />
     </div>
   );
