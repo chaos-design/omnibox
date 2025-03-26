@@ -4,6 +4,20 @@ export const getStorageKey = (key: string) =>
   `${SLOGAN_NAME}_${key}`.toUpperCase();
 
 export const storageTools = (key: string) => {
+  if (typeof window === 'undefined') {
+    return {
+      getStorageKey() {
+        return '';
+      },
+      getItem() {
+        return null;
+      },
+      setItem(value: any) {},
+      removeItem() {},
+      clear() {},
+    };
+  }
+
   return {
     getStorageKey() {
       return getStorageKey(key);
