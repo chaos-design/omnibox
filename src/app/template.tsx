@@ -21,6 +21,7 @@ import { AppConfig } from '../utils/config/app';
 import { MonacoEditor } from '../utils/config/editor';
 
 import { menu } from '../utils/menu';
+import { storageStringifyParseValue } from '../utils/storage/menu';
 
 // console.log('menu', menu);
 
@@ -30,8 +31,9 @@ export default function Template({
   // @ts-ignore
   children,
 }) {
+  const cacheMenuStatus = storageStringifyParseValue();
   const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(cacheMenuStatus.getItem());
   const [appConfig, setAppConfig] = useState<
     Partial<AppConfigParams> | undefined
   >({
@@ -134,7 +136,11 @@ export default function Template({
                     icon={
                       collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />
                     }
-                    onClick={() => setCollapsed(!collapsed)}
+                    onClick={() => {
+                      const status = !collapsed;
+                      cacheMenuStatus.setItem(status);
+                      setCollapsed(status);
+                    }}
                     style={{
                       fontSize: '16px',
                     }}

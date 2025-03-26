@@ -9,7 +9,7 @@ export const storageTools = (key: string) => {
       return getStorageKey(key);
     },
     getItem() {
-      const value = localStorage.getItem(key);
+      const value = window?.localStorage?.getItem?.(key);
       if (value) {
         return JSON.parse(value);
       }
@@ -17,13 +17,13 @@ export const storageTools = (key: string) => {
       return null;
     },
     setItem(value: any) {
-      localStorage.setItem(key, JSON.stringify(value));
+      window?.localStorage?.setItem?.(key, JSON.stringify(value));
     },
     removeItem() {
-      localStorage.removeItem(key);
+      window?.localStorage?.removeItem?.(key);
     },
     clear() {
-      localStorage.clear();
+      window?.localStorage?.clear?.();
     },
   };
 };
