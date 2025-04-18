@@ -45,20 +45,22 @@ export default function Template({
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (pathname !== '/') {
-        event.preventDefault();
-        event.returnValue = '';
-      }
-    };
+  // useEffect(() => {
+  //   const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+  //     if ([
+  //       '/json/stringify-parse'
+  //     ].includes(pathname)) {
+  //       event.preventDefault();
+  //       event.returnValue = '';
+  //     }
+  //   };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
+  //   window.addEventListener('beforeunload', handleBeforeUnload);
 
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener('beforeunload', handleBeforeUnload);
+  //   };
+  // }, []);
 
   return (
     <ConfigProvider theme={themeConfig}>

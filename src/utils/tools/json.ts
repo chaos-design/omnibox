@@ -155,7 +155,7 @@ export function convert2JSON(str: string) {
   try {
     eval(`window.omnibox_convert_json= ${str}`);
 
-    jsonValue = JSON.stringify((window as any).omnibox_convert_json);
+    jsonValue = JSON.stringify((window as any).omnibox_convert_json, null, 2);
   } catch (error) {}
 
   return jsonValue;

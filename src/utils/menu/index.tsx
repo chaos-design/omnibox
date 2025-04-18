@@ -2,6 +2,8 @@ import {
   HomeOutlined,
   AppstoreOutlined,
   CodepenOutlined,
+  JavaScriptOutlined,
+  ShopOutlined,
 } from '@ant-design/icons';
 
 import { omit } from 'lodash';
@@ -33,10 +35,35 @@ export const MENU_INFO: Record<string, any> = {
   'stringify-parse': {
     label: '压缩转义',
   },
+  selector: {
+    label: '选择器',
+  },
+  xpath: {
+    label: 'xpath',
+  },
+  js: {
+    label: 'Javascript',
+    icon: <JavaScriptOutlined />,
+  },
+  'to-json': {
+    label: '转JSON',
+  },
+  'to-ts': {
+    label: '转Typescript',
+  },
+  kits: {
+    label: '工具箱',
+    icon: <ShopOutlined />,
+  },
+  qrcode: {
+    label: '二维码',
+  },
 };
 
 export const menu = MENU_PATH_DATA.map((m) => {
-  const c = MENU_INFO[m.label] ?? {};
+  const c = MENU_INFO[m.label] ?? {
+    label: m.label,
+  };
 
   return {
     ...c,
@@ -44,7 +71,9 @@ export const menu = MENU_PATH_DATA.map((m) => {
     key: c.path || m.key,
     label: c.path ? <Link href={c.path}>{c.label}</Link> : c.label,
     children: m.children?.map((mc) => {
-      const _mc = MENU_INFO[mc.label] ?? {};
+      const _mc = MENU_INFO[mc.label] ?? {
+        label: mc.label,
+      };
 
       return {
         ..._mc,

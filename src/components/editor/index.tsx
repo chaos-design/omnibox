@@ -38,7 +38,101 @@ export interface EditorProps extends MonacoEditorProps {
   onEditorChange?: (v?: string) => void;
 }
 
-const Editor = React.forwardRef(
+export const PureEditor = React.forwardRef(
+  (
+    {
+      className,
+      onEditorChange = (v?: string) => {},
+      ...monacoEditorProps
+    }: EditorProps,
+    ref,
+  ) => {
+    const [value, setValue] = useState(monacoEditorProps?.value);
+    const editorRef = useRef<any>(null);
+
+    const handleEditorChange = useCallback((_v: string | undefined) => {
+      let v = value;
+      if (!_v) {
+        v = value;
+      } else {
+        try {
+          v = JSON.parse(_v);
+        } catch (error) {
+          v = value;
+        }
+      }
+
+      setValue(v);
+      onEditorChange(_v);
+    }, []);
+
+    const getLanguage = React.useCallback(() => {
+      if (editorRef.current) {
+        // @ts-ignore
+        return editorRef.current?.getModel().getLanguageId();
+      }
+
+      return 'json';
+    }, []);
+
+    const handleFormatDocument = React.useCallback(() => {
+      if (editorRef.current) {
+        // @ts-ignore
+        editorRef.current?.getAction?.('editor.action.formatDocument').run();
+      }
+    }, [editorRef.current]);
+
+    useImperativeHandle(ref, () => {
+      return {
+        getValue: () => value,
+        setValue: (v: any) => setValue(v),
+        handleFormatDocument,
+        getLanguage,
+        editor: editorRef.current,
+      };
+    }, [editorRef.current]);
+
+    const handleEditorDidMount = React.useCallback((editor: EditorType) => {
+      // @ts-ignore
+      editorRef.current = editor;
+
+      // @ts-ignore
+      editor.handleFormatDocument = handleFormatDocument;
+      // @ts-ignore
+      editor.getLanguage = getLanguage;
+
+      // 监听 paste 事件
+      editor.onDidPaste(() => {
+        handleFormatDocument();
+      });
+    }, []);
+
+    const editorValue = React.useMemo(() => {
+      try {
+        return JSON.stringify(value, null, 2);
+      } catch (error) {
+        return `${value}`;
+      }
+    }, [value]);
+
+    return (
+      <div className={c(s.editorContainer, className)}>
+        <MonacoEditor
+          height="100%"
+          defaultLanguage={monacoEditorProps?.defaultLanguage ?? 'json'}
+          defaultValue={editorValue}
+          theme={monacoEditorProps?.theme ?? 'vs-dark'}
+          {...omit(monacoEditorProps || {}, 'defaultLanguage', 'theme')}
+          // @ts-ignore
+          onMount={handleEditorDidMount}
+          onChange={handleEditorChange}
+        />
+      </div>
+    );
+  },
+);
+
+export const Editor = React.forwardRef(
   (
     {
       className,
@@ -149,7 +243,7 @@ export interface DiffEditorProps extends MonacoDiffEditorProps {
   format?: boolean;
 }
 
-const DiffEditor = ({
+export const DiffEditor = ({
   className,
   language = 'json',
   ...monacoEditorProps
@@ -186,5 +280,3 @@ const DiffEditor = ({
     </div>
   );
 };
-
-export { Editor, DiffEditor };
