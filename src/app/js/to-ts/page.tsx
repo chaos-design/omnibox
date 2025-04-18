@@ -30,7 +30,6 @@ import { useMonacoEditor } from '../../../utils/config/editor';
 import { copyToClipboard } from '../../../utils/tools/copy';
 import { storageStringifyParseValue } from '../../../utils/storage/json';
 
-import s from './index.module.scss';
 import {
   CopyOutlined,
   FieldStringOutlined,
@@ -39,6 +38,7 @@ import {
   SyncOutlined,
 } from '@ant-design/icons';
 import { convert2JSON, isJSON } from '../../../utils/tools/json';
+import s from './index.module.scss';
 
 const demoText = `{
   "Name": "Rai120",

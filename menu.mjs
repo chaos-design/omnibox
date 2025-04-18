@@ -3,6 +3,11 @@ import * as fs from 'fs';
 
 let counter = 2;
 
+// 可配置的排除目录列表
+const EXCLUDED_FOLDERS = [
+  '/app/api'
+];
+
 const traverseFolder = (folderPath, parentName = '') => {
   const files = fs.readdirSync(folderPath);
   const tree = [];
@@ -12,6 +17,12 @@ const traverseFolder = (folderPath, parentName = '') => {
     const stats = fs.statSync(filePath);
 
     if (stats.isDirectory()) {
+      // 检查是否在排除列表中
+      const shouldExclude = EXCLUDED_FOLDERS.some((excluded) =>
+        filePath.includes(excluded),
+      );
+      if (shouldExclude) continue;
+
       const children = traverseFolder(
         filePath,
         parentName ? `${parentName}/${file}` : file,
