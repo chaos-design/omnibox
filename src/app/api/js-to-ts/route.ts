@@ -36,6 +36,16 @@ function convertJsonToSchema(json: any): CompileParameters {
   };
 }
 
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
+}
+
 export async function POST(request: Request) {
   try {
     const {
@@ -61,7 +71,9 @@ export async function POST(request: Request) {
 
     const tsCode = await compile(jsonSchema, interfaceName, compileOptions);
 
-    return NextResponse.json({ tsCode });
+    const response = NextResponse.json({ tsCode });
+    response.headers.set('Access-Control-Allow-Origin', '*');
+    return response;
   } catch (error: any) {
     console.error('Error in js-to-ts API:', error);
     let errorMessage = 'Failed to convert JSON to TypeScript.';
@@ -72,6 +84,12 @@ export async function POST(request: Request) {
       errorMessage = error.message;
     }
 
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    const response = NextResponse.json(
+      { error: errorMessage },
+      { status: 500 },
+    );
+    response.headers.set('Access-Control-Allow-Origin', '*');
+
+    return response;
   }
 }
