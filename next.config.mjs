@@ -14,7 +14,21 @@ if (isGithubActions) {
 const nextConfig = {
   basePath,
   assetPrefix,
-  output: 'export',
+  experimental: {
+    serverComponentsExternalPackages: ['json-schema-to-typescript'],
+  },
+  async headers() {
+    return [
+      {
+        source: '/api/:path*',
+        headers: [
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Access-Control-Allow-Methods', value: 'POST,GET,OPTIONS' },
+          { key: 'Access-Control-Allow-Headers', value: 'Content-Type' }
+        ]
+      }
+    ]
+  },
   images: {
     remotePatterns: [
       {
@@ -25,7 +39,6 @@ const nextConfig = {
   },
   webpack(config, { isServer }) {
     config.resolve.fallback = { fs: false };
-
     return config;
   },
 };
