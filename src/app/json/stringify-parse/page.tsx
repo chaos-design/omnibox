@@ -10,15 +10,8 @@ import React, {
 
 import { Editor } from '../../../components/editor';
 
-import {
-  Space,
-  Button,
-  ButtonProps,
-  Tabs,
-  Modal,
-  notification,
-  TabsProps,
-} from 'antd';
+import { Space, Button, ButtonProps, Tabs, notification, Input } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
 
 import { useMonacoEditor } from '../../../utils/config/editor';
 import * as json from '../../../utils/tools/json';
@@ -273,14 +266,23 @@ export default function Page() {
   };
 
   const remove = (targetKey: TargetKey) => {
+    if (items.length <= 1) {
+      notification.info({
+        message: '至少保留一个Tab!',
+      });
+      return;
+    }
+
     let newActiveKey = activeKey;
     let lastIndex = -1;
-    items.forEach((item, i) => {
+    const newPanes = items.filter((item, i) => {
       if (item.key === targetKey) {
         lastIndex = i - 1;
+        return false;
       }
+      return true;
     });
-    const newPanes = items.filter((item) => item.key !== targetKey);
+
     if (newPanes.length && newActiveKey === targetKey) {
       if (lastIndex >= 0) {
         newActiveKey = newPanes[lastIndex].key;
@@ -317,6 +319,7 @@ export default function Page() {
         onChange={onChange}
         activeKey={activeKey}
         onEdit={onEdit}
+        removeIcon={items.length > 1 ? <CloseOutlined /> : <React.Fragment />}
         items={items.map((item) => ({
           label: item.label,
           key: item.key,
