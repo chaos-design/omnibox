@@ -46,10 +46,13 @@ export const MENU_INFO: Record<string, any> = {
     icon: <JavaScriptOutlined />,
   },
   'to-json': {
-    label: '转JSON',
+    label: '转 JSON',
   },
   'to-ts': {
-    label: '转Typescript',
+    label: '转 Typescript',
+  },
+  'to-schema': {
+    label: '转 Schema',
   },
   kits: {
     label: '工具箱',

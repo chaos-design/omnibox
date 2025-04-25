@@ -23,36 +23,41 @@ export const MENU_PATH_DATA = [
   },
   {
     label: 'js',
-    key: '6',
+    key: '7',
     path: '/js',
     children: [
       {
-        label: 'to-ts',
+        label: 'to-schema',
         key: '5',
+        path: '/js/to-schema',
+      },
+      {
+        label: 'to-ts',
+        key: '6',
         path: '/js/to-ts',
       },
     ],
   },
   {
     label: 'json',
-    key: '8',
+    key: '9',
     path: '/json',
     children: [
       {
         label: 'stringify-parse',
-        key: '7',
+        key: '8',
         path: '/json/stringify-parse',
       },
     ],
   },
   {
     label: 'kits',
-    key: '10',
+    key: '11',
     path: '/kits',
     children: [
       {
         label: 'qrcode',
-        key: '9',
+        key: '10',
         path: '/kits/qrcode',
       },
     ],

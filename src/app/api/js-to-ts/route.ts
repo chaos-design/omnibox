@@ -1,40 +1,8 @@
 import { NextResponse } from 'next/server';
 import { compile } from 'json-schema-to-typescript';
+import { json2Schema } from '../../../utils/tools/json';
 
 export type CompileParameters = Parameters<typeof compile>[0];
-
-function convertJsonToSchema(json: any): CompileParameters {
-  return {
-    type: 'object',
-    properties: Object.keys(json).reduce(
-      (acc, key) => {
-        const value = json[key];
-        let type;
-        if (Array.isArray(value)) {
-          type = 'array';
-          if (value.length > 0) {
-            acc[key] = {
-              type: 'array',
-              items: convertJsonToSchema(value[0]),
-            };
-          } else {
-            acc[key] = {
-              type: 'array',
-              items: {},
-            };
-          }
-        } else if (typeof value === 'object' && value !== null) {
-          acc[key] = convertJsonToSchema(value);
-        } else {
-          type = typeof value;
-          acc[key] = { type };
-        }
-        return acc;
-      },
-      {} as Record<string, any>,
-    ),
-  };
-}
 
 export async function OPTIONS() {
   return new NextResponse(null, {
@@ -48,11 +16,7 @@ export async function OPTIONS() {
 
 export async function POST(request: Request) {
   try {
-    const {
-      json,
-      interfaceName = 'JsonToTs',
-      splitTypes = true,
-    } = await request.json();
+    const { json, interfaceName = 'JsonToTs' } = await request.json();
 
     if (!json) {
       return NextResponse.json(
@@ -61,12 +25,14 @@ export async function POST(request: Request) {
       );
     }
 
-    const jsonObj = JSON.parse(json);
-    const jsonSchema = convertJsonToSchema(jsonObj);
+    const jsonSchema = json2Schema(JSON.parse(json), interfaceName);
 
     const compileOptions = {
       bannerComment: '',
-      unreachableDefinitions: splitTypes,
+      declareExternallyReferenced: true,
+      enableConstEnums: true,
+      strictIndexSignatures: false,
+      unreachableDefinitions: false,
     };
 
     const tsCode = await compile(jsonSchema, interfaceName, compileOptions);

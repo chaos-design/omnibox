@@ -1,3 +1,5 @@
+import { compile } from 'json-schema-to-typescript';
+
 /**
  * 对 JSON 内容进行转义处理
  * @param input 待转义的 JSON 内容
@@ -174,3 +176,46 @@ export function isJSON(str: string) {
     return false;
   }
 }
+
+export function json2Schema(
+  value: string | Record<string, any> | any[],
+  name: string = 'json2Schema',
+) {
+  try {
+    const json = typeof value === 'string' ? JSON.parse(value) : value;
+
+    // @ts-ignore
+    return import('generate-schema').then((ret) => ret.json(name, json));
+  } catch (error) {
+    return undefined;
+  }
+}
+
+export type CompileParameters = Parameters<typeof compile>[0];
+
+export const compileJSON = async (
+  json: any,
+  { name, ...options }: CompileParameters[2] & { name: string },
+) => {
+  try {
+    const schema = json2Schema(json, name);
+
+    if (!schema) {
+      return Promise.resolve('');
+    }
+
+    return compile(schema, name, {
+      bannerComment: '',
+      declareExternallyReferenced: true,
+      enableConstEnums: true,
+      strictIndexSignatures: false,
+      unreachableDefinitions: false,
+      format: false,
+      unknownAny: false,
+      ...options,
+    });
+  } catch (error) {
+    console.error('Error compiling JSON to TypeScript:', error);
+    return Promise.resolve('');
+  }
+};

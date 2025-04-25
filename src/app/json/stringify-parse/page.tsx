@@ -29,9 +29,9 @@ import { storageStringifyParseValue } from '../../../utils/storage/json';
 import s from './index.module.scss';
 
 const demoText = `{
-  "Name": "Rai120",
-  "Github": "https://github.com/rain120",
-  "Info": {
+  "name": "Rai120",
+  "github": "https://github.com/rain120",
+  "info": {
     "age": 20,
     "active": true,
     "description": "😊他说：“你好，世界！”"

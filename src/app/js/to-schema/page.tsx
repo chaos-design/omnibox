@@ -37,30 +37,23 @@ import {
   SettingOutlined,
   SyncOutlined,
 } from '@ant-design/icons';
-import {
-  compileJSON,
-  convert2JSON,
-  isJSON,
-  json2Schema,
-} from '../../../utils/tools/json';
-
-import { PureEditor } from '../../../components/editor';
+import { convert2JSON, isJSON, json2Schema } from '../../../utils/tools/json';
 
 import s from './index.module.scss';
 
-// const PureEditor = dynamic(
-//   () => import('../../../components/editor').then((mod) => mod.PureEditor),
-//   {
-//     ssr: false,
-//     // loading: () => <div>Loading editor...</div>,
-//   },
-// );
+const PureEditor = dynamic(
+  () => import('../../../components/editor').then((mod) => mod.PureEditor),
+  {
+    ssr: false,
+    loading: () => <div>Loading editor...</div>,
+  },
+);
 
 const Editor = dynamic(
   () => import('../../../components/editor').then((mod) => mod.Editor),
   {
     ssr: false,
-    // loading: () => <div>Loading editor...</div>,
+    loading: () => <div>Loading editor...</div>,
   },
 );
 
@@ -88,13 +81,10 @@ export default function Page() {
   const { editor } = useMonacoEditor();
   const cache = storageStringifyParseValue();
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [interfaceName, setInterfaceName] = useState('RootInterface');
-  const [typeAlias, setTypeAlias] = useState(true);
+  const [name, setName] = useState('JSON2Schema');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false); // 添加加载状态
-
-  const pureEditorRef = useRef<any>(null);
 
   useEffect(() => {
     if (!editor) {
@@ -128,65 +118,9 @@ export default function Page() {
 
         cache.setItem(value);
         try {
-          JSON.parse(value);
-
-          const tsContent = await compileJSON(JSON.parse(value), {
-            name: interfaceName,
-          });
-
-          // if (typeAlias) {
-          //   const { run } = await import('json_typegen_wasm');
-
-          //   tsContent = run(
-          //     interfaceName,
-          //     value,
-          //     JSON.stringify({
-          //       output_mode: typeAlias ? 'typescript/typealias' : 'typescript',
-          //     }),
-          //   );
-          // } else {
-          //   tsContent = await compileJSON(JSON.parse(value), {
-          //     name: interfaceName,
-          //   });
-          // }
-
-          if (tsContent) {
-            setTs(tsContent);
-
-            requestIdleCallback(
-              () => {
-                if (pureEditorRef.current) {
-                  pureEditorRef?.current?.handleFormatDocument?.();
-                }
-              },
-              { timeout: 1000 },
-            );
-          }
-          return;
-
-          const response = await fetch('/api/js-to-ts', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              json: value,
-              interfaceName,
-            }),
-          });
-
-          console.log('Response status:', response.status);
-          const result = await response.json();
-          console.log('API response:', result);
-
-          if (!response.ok) {
-            throw new Error(result.error || 'API request failed');
-          }
-
-          if (result?.tsCode) {
-            setTs(result.tsCode);
-          } else {
-            setError('转换成功，但未返回有效的 TypeScript 代码。');
+          const res = await json2Schema(JSON.parse(value), name);
+          if (res) {
+            setTs(JSON.stringify(res, null, 2));
           }
         } catch (err: any) {
           console.error('Transform error:', err);
@@ -211,7 +145,7 @@ export default function Page() {
         setIsLoading(false); // 无输入时设置加载状态为 false
       }
     },
-    [editor, cache, interfaceName, typeAlias],
+    [editor, cache, name],
   );
 
   const handleEditorChange = useCallback(
@@ -333,14 +267,12 @@ export default function Page() {
 
   useEffect(() => {
     form.setFieldsValue({
-      interfaceName,
-      typeAlias,
+      name,
     });
-  }, [interfaceName, typeAlias]);
+  }, [name]);
 
-  const onFinish = (values: { interfaceName: string; typeAlias: boolean }) => {
-    setInterfaceName(values.interfaceName);
-    setTypeAlias(values.typeAlias);
+  const onFinish = (values: { name: string; splitTypes: boolean }) => {
+    setName(values.name);
     setIsModalOpen(false);
     transform();
   };
@@ -405,7 +337,7 @@ export default function Page() {
             }}
           >
             <Space>
-              <Typography.Title level={4}>Typescript</Typography.Title>
+              <Typography.Title level={4}>Schema</Typography.Title>
             </Space>
             <Space align="start" wrap size={10}>
               {[
@@ -443,12 +375,9 @@ export default function Page() {
           <Spin spinning={isLoading} wrapperClassName={s.tsEditor}>
             <PureEditor
               value={ts}
-              ref={pureEditorRef}
-              options={
-                {
-                  // readOnly: true,
-                }
-              }
+              options={{
+                readOnly: true,
+              }}
               defaultLanguage="typescript"
             />
           </Spin>
@@ -471,15 +400,12 @@ export default function Page() {
           }}
         >
           <Form.Item
-            label="接口名称"
-            name="interfaceName"
-            rules={[{ required: true, message: '请输入接口名称' }]}
+            label="名称"
+            name="name"
+            rules={[{ required: true, message: '请输入名称' }]}
           >
-            <Input placeholder="请输入接口名称" />
+            <Input placeholder="请输入名称" />
           </Form.Item>
-          {/* <Form.Item label="创建单一类型" name="typeAlias">
-            <Switch checkedChildren="是" unCheckedChildren="否" />
-          </Form.Item> */}
         </Form>
       </Modal>
     </div>
