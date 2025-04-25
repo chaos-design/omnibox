@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const jsonSchema = json2Schema(JSON.parse(json), interfaceName);
+    const jsonSchema = await json2Schema(JSON.parse(json), interfaceName);
 
     const compileOptions = {
       bannerComment: '',
