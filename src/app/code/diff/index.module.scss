@@ -1,0 +1,43 @@
+.page {
+  display: grid;
+  height: 100%;
+  min-height: calc(100dvh - 110px);
+  grid-template-rows: auto minmax(520px, 1fr);
+  gap: 10px;
+}
+
+.toolbar {
+  justify-self: end;
+}
+
+.editor,
+.loading {
+  min-height: 520px;
+}
+
+.loading {
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  color: var(--editor-loading);
+  background: var(--editor-background);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+@media (max-width: 720px) {
+  .page {
+    min-height: calc(100dvh - 102px);
+    grid-template-rows: auto minmax(460px, 1fr);
+  }
+
+  .toolbar {
+    width: 100%;
+    justify-self: stretch;
+  }
+
+  .editor,
+  .loading {
+    min-height: 460px;
+  }
+}

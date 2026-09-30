@@ -1,0 +1,101 @@
+.token {
+  min-height: 180px;
+  resize: vertical;
+  font-family: var(--font-mono);
+  line-height: 1.65;
+}
+
+.status {
+  display: flex;
+  padding: 10px 12px;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--surface-muted);
+  font-size: 11px;
+
+  span {
+    color: var(--text-tertiary);
+  }
+
+  strong {
+    color: var(--text-primary);
+  }
+
+  &[data-status='active'] strong {
+    color: var(--primary);
+  }
+
+  &[data-status='expired'] strong,
+  &[data-status='not-yet-valid'] strong {
+    color: var(--destructive);
+  }
+}
+
+.claims {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+
+  > div {
+    display: grid;
+    padding: 8px 10px;
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 10px;
+
+    + div {
+      border-top: 1px solid var(--border-color);
+    }
+  }
+
+  dt {
+    color: var(--text-tertiary);
+    font-size: 10px;
+  }
+
+  dd {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-align: right;
+  }
+}
+
+.jsonSection {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.jsonHeading {
+  display: flex;
+  min-height: 28px;
+  align-items: center;
+  justify-content: space-between;
+
+  h3 {
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 650;
+  }
+}
+
+.json {
+  min-height: 150px;
+  flex: 1;
+  resize: vertical;
+  font-family: var(--font-mono);
+}
+
+.signature {
+  min-height: 68px;
+  resize: vertical;
+  font-family: var(--font-mono);
+}

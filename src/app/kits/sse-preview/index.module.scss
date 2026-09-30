@@ -1,0 +1,458 @@
+/* 视口锁定：整页不滚动，播放控制、摘要条、tab 栏始终可见，
+   仅事件 / 诊断列表内部滚动。 */
+.page {
+  height: calc(100dvh - 110px);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.editorWrap {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+
+  /* 覆盖 editor 组件自带的 320px 最小高度，交由网格分配空间 */
+  > div {
+    min-height: 0;
+  }
+}
+
+.editorLoading {
+  display: grid;
+  min-height: 200px;
+  flex: 1;
+  place-items: center;
+  color: var(--text-tertiary);
+  font-size: 12px;
+}
+
+.editorHint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-tertiary);
+  font-size: 10px;
+  line-height: 1.5;
+
+  svg {
+    width: 12px;
+    height: 12px;
+    flex: 0 0 auto;
+  }
+}
+
+/* Monaco 装饰：高亮选中帧与未派发帧对应的源码行 */
+:global(.sse-line-active) {
+  background: color-mix(in oklch, var(--primary) 18%, transparent);
+  box-shadow: inset 2px 0 0 var(--primary);
+}
+
+:global(.sse-line-dropped) {
+  background: color-mix(in oklch, var(--destructive) 12%, transparent);
+}
+
+/* 播放控制条 */
+.playback {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.playbackControls {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 5px;
+}
+
+.interval {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-tertiary);
+  font-size: 10px;
+  white-space: nowrap;
+
+  select {
+    height: 26px;
+    padding: 0 4px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-secondary);
+    background: var(--surface);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    cursor: pointer;
+  }
+}
+
+.progressLabel {
+  flex: 0 0 auto;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+/* 单行摘要：严格不换行，超出以省略号截断 */
+.summary {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+  overflow: hidden;
+  padding: 5px 9px;
+  border: 1px solid var(--border-color);
+  border-radius: 7px;
+  background: var(--surface-muted);
+  font-size: 10px;
+  white-space: nowrap;
+
+  > span {
+    flex: 0 0 auto;
+    color: var(--text-tertiary);
+  }
+
+  strong {
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 650;
+  }
+
+  > span[data-tone='warn'] strong {
+    color: var(--destructive);
+  }
+}
+
+.tabs {
+  min-height: 0;
+  flex: 1;
+
+  [data-slot='tabs-content'] {
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+  }
+}
+.tabsList {
+  width: 100%;
+  flex: 0 0 auto;
+}
+
+.tabCount {
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--muted);
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  line-height: 15px;
+
+  [data-active] & {
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+}
+
+.frames {
+  display: flex;
+  min-height: 0;
+  padding-right: 4px;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+}
+
+.frame {
+  flex: 0 0 auto;
+  padding: 8px 9px;
+  border: 1px solid var(--border-color);
+  border-left: 3px solid var(--primary);
+  border-radius: 7px;
+  background: var(--surface-muted);
+  transition: border-color 120ms ease;
+
+  &[data-silent='true'] {
+    border-left-color: var(--border-strong);
+    border-left-style: dashed;
+    opacity: 0.62;
+  }
+
+  /* 接收中：已收到部分 data，但结尾空行未到，还不能判定事件完整。 */
+  &[data-state='live'] {
+    border-left-color: var(--primary);
+    background: color-mix(in oklch, var(--primary) 7%, var(--surface-muted));
+  }
+
+  &[data-active='true'] {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 1px var(--primary);
+  }
+}
+
+.frameButton {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.frameIndex {
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.frameType {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 650;
+
+  &[data-kind='message'] {
+    background: var(--muted);
+    color: var(--text-secondary);
+  }
+}
+
+.frameState {
+  color: var(--text-secondary);
+  font-size: 9px;
+}
+
+.frameLines {
+  margin-left: auto;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  font-size: 9px;
+}
+
+.frameBody {
+  margin-top: 7px;
+}
+
+.frameReason {
+  color: var(--text-tertiary);
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+/* data 展示块：限高内部滚动，溢出时右下角提供放大入口 */
+.payloadBox {
+  position: relative;
+}
+
+/* data 展示块：限高内部滚动。
+   限高是「放大」入口存在的前提——没有 max-height 就永远检测不到溢出，
+   放大按钮也就不会出现。纵向嵌套滚动条用 overlay 样式压到内容之下，
+   不占用额外宽度。 */
+.payload {
+  padding: 7px 8px;
+  max-height: 132px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-primary);
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+
+  &[data-json='true'] {
+    border-color: color-mix(in oklch, var(--primary) 32%, var(--border-color));
+  }
+
+  /* 接收中的半截 data，用虚线区分于已完整的 payload。 */
+  &[data-partial='true'] {
+    border-style: dashed;
+    border-color: color-mix(in oklch, var(--primary) 40%, var(--border-color));
+    color: var(--text-secondary);
+  }
+}
+
+.payloadExpand {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  color: var(--text-tertiary);
+  background: var(--surface);
+  box-shadow: 0 0 0 1px var(--border-color);
+}
+
+.diagnostics {
+  display: flex;
+  min-height: 0;
+  padding-right: 4px;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+
+  > li {
+    display: flex;
+    padding: 8px 10px;
+    flex: 0 0 auto;
+    align-items: flex-start;
+    gap: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 7px;
+    color: var(--text-secondary);
+    background: var(--surface-muted);
+    font-size: 11px;
+    line-height: 1.5;
+
+    > svg {
+      width: 13px;
+      height: 13px;
+      flex: 0 0 auto;
+      margin-top: 2px;
+      color: var(--text-tertiary);
+    }
+  }
+
+  > li[data-level='error'] {
+    border-color: color-mix(in oklch, var(--destructive) 45%, var(--border-color));
+
+    > svg {
+      color: var(--destructive);
+    }
+  }
+
+  > li[data-level='info'] > svg {
+    color: var(--primary);
+  }
+}
+
+.empty {
+  display: grid;
+  min-height: 120px;
+  flex: 1;
+  place-items: center;
+  padding: 0 20px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 8px;
+  color: var(--text-tertiary);
+  font-size: 12px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+/* data 抽屉：从右侧滑出，宽度接近全屏以容纳长行 JSON */
+.payloadSheet {
+  width: min(1180px, 88vw);
+  max-width: min(1180px, 88vw);
+  gap: 0;
+  padding: 0;
+}
+
+/* 抽屉内的 Monaco 占满剩余高度，头尾固定 */
+.fullPayload {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+
+  /* 覆盖 editor 组件自带的 320px 最小高度与边框 */
+  > div {
+    min-height: 0;
+    border: 0;
+    border-radius: 0;
+  }
+}
+
+.fullPayloadLoading {
+  display: grid;
+  height: 100%;
+  place-items: center;
+  color: var(--editor-loading);
+  font-size: 12px;
+}
+
+/* 代码抽屉：中等宽度，比 data 抽屉窄，避免遮挡过多内容区 */
+.codeSheet {
+  width: min(680px, 92vw);
+  max-width: min(680px, 92vw);
+  gap: 0;
+  padding: 0;
+}
+
+.codeBody {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+.codeTabs {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+
+  [data-slot='tabs-list'] {
+    flex: 0 0 auto;
+  }
+
+  [data-slot='tabs-content'] {
+    display: flex;
+    min-height: 0;
+    flex: 1;
+    flex-direction: column;
+  }
+
+  /* 覆盖 editor 组件自带的 320px 最小高度与边框 */
+  > [data-slot='tabs-content'] > div {
+    min-height: 0;
+    border: 0;
+    border-radius: 0;
+  }
+}
+
+.codeLoading {
+  display: grid;
+  height: 100%;
+  place-items: center;
+  color: var(--editor-loading);
+  font-size: 12px;
+}
+
+@media (max-width: 560px) {
+  .summary {
+    gap: 9px;
+  }
+
+  .playback {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+}

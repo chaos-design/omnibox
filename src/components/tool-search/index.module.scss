@@ -1,0 +1,171 @@
+.trigger {
+  min-width: 172px;
+  margin-left: 12px;
+  justify-content: flex-start;
+}
+
+.triggerLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.triggerShortcut {
+  min-width: 30px;
+  margin-left: auto;
+  padding: 2px 5px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  color: var(--text-tertiary);
+  background: var(--surface-muted);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.overlay {
+  background: rgb(3 7 18 / 58%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.dialog {
+  width: min(640px, calc(100% - 24px));
+  max-width: none;
+  border: 1px solid var(--border-strong);
+  box-shadow:
+    0 24px 80px rgb(0 0 0 / 38%),
+    0 2px 12px rgb(0 0 0 / 18%);
+}
+
+.command {
+  border-radius: 11px;
+}
+
+.list {
+  max-height: min(420px, 58vh);
+  padding: 4px;
+}
+
+.itemIcon {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--border-color);
+  border-radius: 7px;
+  color: var(--primary);
+  background: var(--accent-soft);
+
+  svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+.itemCopy {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+
+  strong {
+    color: var(--text-primary);
+    font-size: 12px;
+    font-weight: 650;
+  }
+
+  span {
+    overflow: hidden;
+    color: var(--text-tertiary);
+    font-size: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.footer {
+  display: flex;
+  min-height: 38px;
+  padding: 7px 10px;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-tertiary);
+  background: var(--surface-muted);
+  font-size: 9px;
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  kbd {
+    display: inline-flex;
+    min-width: 22px;
+    min-height: 20px;
+    padding: 2px 5px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    color: var(--text-secondary);
+    background: var(--surface);
+    font-family: var(--font-mono);
+
+    svg {
+      width: 11px;
+      height: 11px;
+    }
+  }
+}
+
+@media (max-width: 899px) {
+  .trigger {
+    width: 32px;
+    min-width: 32px;
+    margin-left: 4px;
+    padding-inline: 0;
+    justify-content: center;
+  }
+
+  .triggerLabel,
+  .triggerShortcut {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .dialog {
+    width: calc(100% - 24px);
+  }
+
+  .list {
+    max-height: calc(100dvh - 190px);
+  }
+
+  .itemCopy span {
+    display: none;
+  }
+
+  .command [data-slot='command-shortcut'] {
+    display: none;
+  }
+
+  .footer {
+    justify-content: space-between;
+    gap: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .dialog {
+    animation: none !important;
+    transition: none !important;
+  }
+}

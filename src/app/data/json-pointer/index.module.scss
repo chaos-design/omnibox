@@ -1,0 +1,25 @@
+.json {
+  min-height: 260px;
+  resize: vertical;
+  font-family: var(--font-mono);
+}
+
+.value {
+  min-height: 86px;
+  resize: vertical;
+  font-family: var(--font-mono);
+}
+
+.output {
+  min-height: 500px;
+  flex: 1;
+  resize: vertical;
+  font-family: var(--font-mono);
+  line-height: 1.65;
+}
+
+@media (max-width: 560px) {
+  .output {
+    min-height: 300px;
+  }
+}

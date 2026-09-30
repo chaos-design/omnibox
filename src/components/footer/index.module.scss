@@ -1,0 +1,18 @@
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.link {
+  color: inherit;
+  transition: color 160ms ease;
+
+  &:hover {
+    color: var(--primary);
+  }
+}

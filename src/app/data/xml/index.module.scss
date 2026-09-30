@@ -1,0 +1,68 @@
+.xml {
+  min-height: 250px;
+  resize: vertical;
+  font-family: var(--font-mono);
+}
+
+.output {
+  min-height: 260px;
+  resize: vertical;
+  font-family: var(--font-mono);
+}
+
+.query {
+  display: flex;
+  min-height: 180px;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+
+  ol {
+    display: flex;
+    max-height: 260px;
+    padding: 8px;
+    flex-direction: column;
+    gap: 6px;
+    overflow-y: auto;
+  }
+
+  li {
+    padding: 7px 8px;
+    overflow-wrap: anywhere;
+    border-radius: 6px;
+    background: var(--surface-muted);
+    font-family: var(--font-mono);
+    font-size: 10px;
+  }
+
+  > p {
+    display: grid;
+    flex: 1;
+    place-items: center;
+    color: var(--text-tertiary);
+    font-size: 11px;
+  }
+}
+
+.queryHeading {
+  display: flex;
+  min-height: 38px;
+  padding: 8px 10px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+
+  h3 {
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 650;
+  }
+
+  span {
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-size: 9px;
+  }
+}

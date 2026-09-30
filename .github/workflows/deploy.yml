@@ -1,0 +1,84 @@
+name: Deploy Site to Github Pages
+
+on:
+  push:
+    branches: ["main"]
+  # inputs 必须声明在 on.workflow_dispatch 下面；
+  # 放在 workflow 顶层会被忽略，inputs.branch 变成 undefined。
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 要部署的分支
+        required: false
+        default: main
+        type: string
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # push 事件下 inputs.branch 为空，回退到触发 ref。
+          ref: ${{ inputs.branch || github.ref_name }}
+
+      # 不传 version：action-setup 会读 package.json 的 packageManager 字段，
+      # 单一来源，避免两处版本漂移。
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.22.3
+          cache: "pnpm"
+          cache-dependency-path: pnpm-lock.yaml
+
+      # postinstall 会把 monaco-editor 的 min/vs 复制到 public/monaco，
+      # 供浏览器端 AMD loader 加载；必须在 build 之前完成。
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify
+        run: pnpm check
+
+      - name: Prepare Pages artifact
+        run: |
+          # 产物含 _next/ 与 __next.*.txt，Jekyll 默认会忽略下划线开头的路径，
+          # .nojekyll 是让它们能被直接访问的唯一开关。
+          touch ./out/.nojekyll
+          # 产物里必须存在自托管的 monaco 资源，否则编辑器在页面上会白屏。
+          test -f ./out/monaco/vs/loader.js
+          test -f ./out/monaco/vs/editor/editor.main.js
+
+      # include-hidden-files 必须显式为 true：该 action 从 v4 起默认排除
+      # dotfiles，不开这个开关，上一步生成的 .nojekyll 会被静默丢弃，
+      # 部署显示成功但所有 _next 资源 404（HTML 能开、样式脚本全挂）。
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: ./out
+          include-hidden-files: true
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Publish to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

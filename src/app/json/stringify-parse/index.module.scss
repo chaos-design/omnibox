@@ -1,0 +1,139 @@
+.page {
+  display: flex;
+  min-height: calc(100dvh - 110px);
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tabsBar {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tabs {
+  width: max-content;
+  flex: 0 0 auto;
+}
+
+.tabsList {
+  min-width: max-content;
+}
+
+.tabTrigger {
+  min-width: 76px;
+  flex: 0 0 auto;
+}
+
+.tabClose {
+  margin-left: -7px;
+  color: var(--text-tertiary);
+}
+
+.addTab {
+  flex: 0 0 auto;
+  color: var(--text-secondary);
+}
+
+.actions {
+  display: flex;
+  width: 156px;
+  flex: 0 0 156px;
+  flex-direction: column;
+  padding: 8px;
+  align-items: stretch;
+  gap: 6px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--surface);
+
+  [data-slot='button'] {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+.workspace {
+  display: flex;
+  min-width: 0;
+  min-height: 480px;
+  flex: 1;
+  gap: 10px;
+}
+
+.panel {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  min-height: 480px;
+  flex: 1;
+  grid-template-rows: minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+  white-space: nowrap;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  margin-block: 2px;
+  background: var(--border-strong);
+}
+
+.editor,
+.loading {
+  min-width: 0;
+  min-height: 480px;
+}
+
+.editor {
+  height: 100%;
+}
+
+.loading {
+  display: grid;
+  height: 100%;
+  place-items: center;
+  border-radius: 8px;
+  color: var(--editor-loading);
+  background: var(--editor-background);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+@media (max-width: 920px) {
+  .page {
+    min-height: calc(100dvh - 102px);
+  }
+
+  .panel {
+    min-height: 440px;
+  }
+
+  .actions {
+    width: 148px;
+    flex-basis: 148px;
+  }
+
+  .editor,
+  .loading {
+    min-height: 396px;
+  }
+}

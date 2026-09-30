@@ -1,0 +1,43 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.languageSelect {
+  width: 160px;
+  justify-content: space-between;
+}
+
+.languageValue {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.languagePopover {
+  width: min(280px, calc(100vw - 24px));
+  padding: 0;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media (max-width: 640px) {
+  .toolbar {
+    width: 100%;
+  }
+
+  .languageSelect {
+    width: auto;
+    min-width: 150px;
+    flex: 1;
+  }
+}
