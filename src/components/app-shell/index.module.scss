@@ -234,7 +234,9 @@
 }
 
 .content {
+  display: flex;
   min-height: calc(100dvh - 102px);
+  flex-direction: column;
   padding: 18px;
   overflow: hidden;
 }

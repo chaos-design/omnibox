@@ -9,14 +9,14 @@
   },
   "scripts": {
     "dev": "next dev --port 5454",
-    "build": "next build",
+    "build": "next build && node scripts/optimize-assets.mjs",
     "start": "next start --port 5454",
     "menu": "node menu.mjs",
     "postinstall": "node scripts/sync-monaco.mjs",
     "lint": "biome lint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "check": "biome lint . && tsc --noEmit && vitest run && next build",
+    "check": "biome lint . && tsc --noEmit && vitest run && pnpm build",
     "format": "biome format --write .",
     "format:check": "biome format .",
     "prepare": "husky"
