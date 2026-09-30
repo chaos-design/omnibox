@@ -407,7 +407,7 @@ export default function SsePreviewPage() {
     <ToolWorkbench
       className={s.page}
       description="按 WHATWG 规范解析 SSE 事件流，还原分帧、字段累积与事件派发全过程，并可模拟数据逐块到达的效果"
-      title="SSE 消息预览"
+      title="SSE Preview"
     >
       <ToolGrid>
         <ToolPanel description="事件流原文，可直接编辑" title="SSE 输入">

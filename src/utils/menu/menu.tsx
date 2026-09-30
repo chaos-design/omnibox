@@ -124,6 +124,9 @@ export const MENU_INFO: Record<string, MenuInfo> = {
   'http-builder': {
     label: 'HTTP 代码生成',
   },
+  'sse-preview': {
+    label: 'SSE Preview',
+  },
   qrcode: {
     label: '二维码',
   },

@@ -252,7 +252,7 @@ export const toolCatalog: ToolCatalogItem[] = [
       '事件流',
       '流式',
     ],
-    title: 'SSE 消息预览',
+    title: 'SSE Preview',
   },
   {
     description: '秒、毫秒时间戳与日期双向转换',

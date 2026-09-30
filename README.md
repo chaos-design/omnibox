@@ -73,7 +73,7 @@
 | [JWT 解码](https://chaos-design.github.io/omnibox/kits/jwt/) | 载荷解码与标准 Claims 状态检查 |
 | [HMAC](https://chaos-design.github.io/omnibox/kits/hmac/) | HMAC-SHA 消息认证码生成 |
 | [HTTP 代码生成](https://chaos-design.github.io/omnibox/kits/http-builder/) | cURL、Fetch 与原始 HTTP 请求 |
-| [SSE 消息预览](https://chaos-design.github.io/omnibox/kits/sse-preview/) | 事件流行级解析、帧装配与事件派发可视化 |
+| [SSE Preview](https://chaos-design.github.io/omnibox/kits/sse-preview/) | 事件流行级解析、帧装配与事件派发可视化 |
 | [时间戳](https://chaos-design.github.io/omnibox/kits/timestamp/) | 秒 / 毫秒时间戳与日期双向转换 |
 | [进制转换](https://chaos-design.github.io/omnibox/kits/radix/) | 大整数转为二、八、十、十六进制 |
 | [URL 解析](https://chaos-design.github.io/omnibox/kits/url-parser/) | 组成部分拆解与查询参数分析 |
