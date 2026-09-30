@@ -55,7 +55,7 @@ const Editor = dynamic(
   {
     loading: () => (
       <div className={s.loading}>
-        <Loading label="正在加载 JSON 编辑器" />
+        <Loading hint="正在加载 JSON 编辑器" />
       </div>
     ),
     ssr: false,

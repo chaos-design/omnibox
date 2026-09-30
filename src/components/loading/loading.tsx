@@ -6,26 +6,37 @@ import s from './index.module.scss';
 
 export interface LoadingProps {
   className?: string;
-  /** 只给读屏播报，视觉上不渲染任何文字。 */
+  /** 视觉上的一行提示，说明正在加载什么。 */
+  hint?: string;
+  /** 读屏播报文案。缺省复用 hint。 */
   label?: string;
 }
 
 /**
- * 全站唯一的加载指示器：图标块 + 光晕脉冲 + 三点波，三层动效各自独立。
- * 刻意不显示文案 —— 路由过渡往往只存在几百毫秒，文字来不及读就被撤掉，
- * 只会制造一次闪烁；语义交给 aria-label，视觉交给运动。
+ * 全站唯一的加载指示器。
+ *
+ * 形态是一个紧凑的胶囊：旋转图标 + 提示文案 + 三点波，横向排成一行。
+ * 刻意不做成上下堆叠的两块 —— 那样会读成两个独立元素、视觉重心也会散开；
+ * 收成一行之后整体只有一个重心，落在哪都是居中的。
+ *
+ * 动效分三层互不干扰：图标自转、胶囊底色呼吸、点波依次上跳。
  */
-export function Loading({ className, label = '页面加载中' }: LoadingProps) {
+export function Loading({ className, hint, label }: LoadingProps) {
   return (
-    <div aria-label={label} className={cn(s.root, className)} role="status">
-      <span aria-hidden="true" className={s.chip}>
+    <div
+      aria-label={label ?? hint ?? '页面加载中'}
+      className={cn(s.root, className)}
+      role="status"
+    >
+      <div aria-hidden="true" className={s.pill}>
         <Loader2Icon className={s.icon} />
-      </span>
-      <span aria-hidden="true" className={s.dots}>
-        <span className={s.dot} />
-        <span className={s.dot} />
-        <span className={s.dot} />
-      </span>
+        {hint ? <span className={s.hint}>{hint}</span> : null}
+        <span className={s.dots}>
+          <span className={s.dot} />
+          <span className={s.dot} />
+          <span className={s.dot} />
+        </span>
+      </div>
     </div>
   );
 }

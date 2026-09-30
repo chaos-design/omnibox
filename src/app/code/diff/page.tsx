@@ -16,7 +16,7 @@ const DiffEditor = dynamic(
   {
     loading: () => (
       <div className={s.loading}>
-        <Loading label="正在加载对比编辑器" />
+        <Loading hint="正在加载对比编辑器" />
       </div>
     ),
     ssr: false,

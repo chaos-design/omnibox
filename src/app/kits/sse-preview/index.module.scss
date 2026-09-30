@@ -31,11 +31,6 @@
   place-items: center;
 }
 
-// sheet 内的编辑器加载态空间有限，整体缩到 0.7。
-.compact {
-  transform: scale(0.7);
-}
-
 .editorHint {
   display: flex;
   align-items: center;

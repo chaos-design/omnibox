@@ -1,5 +1,6 @@
 // 高度对齐 components/app-shell 里 .content 的 min-height，
 // 保证过渡态在内容区里真正垂直居中，而不是偏上 1/4 屏。
+// 水平方向由 .root 的 justify-content: center 负责，胶囊自身宽度自适应内容。
 .root {
   min-height: calc(100dvh - 138px);
 }

@@ -18,6 +18,7 @@ import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import type { EditorInstance } from '../../../components/editor';
+import { Loading } from '../../../components/loading';
 import {
   ToolGrid,
   ToolPanel,
@@ -44,7 +45,6 @@ import {
   TabsList,
   TabsTrigger,
 } from '../../../components/ui/tabs';
-import { Loading } from '../../../components/loading';
 import { copyToClipboard } from '../../../utils/tools/copy';
 import {
   buildSseClientCode,
@@ -167,7 +167,7 @@ function PayloadBlock({
               language={payloadLanguage(frame, partial)}
               loading={
                 <div className={s.fullPayloadLoading}>
-                  <Loading className={s.compact} label="正在加载数据帧" />
+                  <Loading hint="正在加载数据帧" />
                 </div>
               }
               modelKey="frame"
@@ -657,10 +657,7 @@ export default function SsePreviewPage() {
                     language={type !== 'curl' ? 'javascript' : 'shell'}
                     loading={
                       <div className={s.codeLoading}>
-                        <Loading
-                          className={s.compact}
-                          label="正在加载客户端代码"
-                        />
+                        <Loading hint="正在加载客户端代码" />
                       </div>
                     }
                     modelKey={`code/${type}`}

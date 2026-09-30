@@ -1,36 +1,50 @@
 .root {
-  display: grid;
-  gap: 16px;
-  place-items: center;
+  display: flex;
+  padding: 24px 16px;
+  align-items: center;
+  justify-content: center;
   animation: loading-enter 240ms ease-out both;
 }
 
-.chip {
-  display: grid;
-  width: 48px;
-  height: 48px;
-  place-items: center;
+// 单行胶囊：图标 + 提示 + 点波，整体一个视觉重心。
+.pill {
+  display: inline-flex;
+  max-width: 100%;
+  padding: 7px 14px 7px 12px;
+  align-items: center;
+  gap: 8px;
   border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: 999px;
   color: var(--primary);
-  background: var(--accent-soft);
-  animation: chip-pulse 1.8s ease-in-out infinite;
+  background: var(--surface);
+  box-shadow: 0 0 0 0 var(--primary-glow);
+  animation: pill-pulse 1.8s ease-in-out infinite;
 }
 
 .icon {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
   animation: icon-spin 900ms linear infinite;
+}
+
+.hint {
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .dots {
   display: inline-flex;
-  gap: 6px;
+  flex: 0 0 auto;
+  gap: 4px;
 }
 
 .dot {
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
   border-radius: 999px;
   background: var(--primary);
   animation: dot-wave 1.1s ease-in-out infinite;
@@ -62,14 +76,14 @@
   }
 }
 
-@keyframes chip-pulse {
+@keyframes pill-pulse {
   0%,
   100% {
     box-shadow: 0 0 0 0 var(--primary-glow);
   }
 
   50% {
-    box-shadow: 0 0 0 9px rgb(0 0 0 / 0%);
+    box-shadow: 0 0 0 8px rgb(0 0 0 / 0%);
   }
 }
 
@@ -83,13 +97,13 @@
 
   35% {
     opacity: 1;
-    transform: translateY(-4px);
+    transform: translateY(-3px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .root,
-  .chip,
+  .pill,
   .icon,
   .dot {
     animation: none;

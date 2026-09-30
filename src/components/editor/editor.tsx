@@ -147,7 +147,7 @@ function EditorComponent(
         language={language}
         loading={
           <div className={s.editorLoading}>
-            <Loading label="正在加载编辑器" />
+            <Loading hint="正在加载编辑器" />
           </div>
         }
         options={mergedOptions}
@@ -207,7 +207,7 @@ export function DiffEditor({
         language={language}
         loading={
           <div className={s.editorLoading}>
-            <Loading label="正在加载对比编辑器" />
+            <Loading hint="正在加载对比编辑器" />
           </div>
         }
         modifiedModelPath={`${path}/modified`}
