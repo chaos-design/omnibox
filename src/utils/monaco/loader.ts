@@ -21,7 +21,7 @@ let preloaded = false;
  * 1. AMD 产物（~3MB）—— loader 只在首次 init 时下载。这里提前到空闲时段，
  *    用户点进编辑器工具时通常已经就绪。
  * 2. createModel 的整篇重新分词 —— 靠 <Editor> 传稳定的 path + keepCurrentModel
- *    复用同一个 model 解决，见 components/editor/editor.tsx 的 pathOf 注释。
+ *    复用同一个 model 解决，见 components/editor/model-path.ts。
  */
 export function preloadMonaco() {
   if (preloading || preloaded || typeof window === 'undefined') {
