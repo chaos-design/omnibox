@@ -27,52 +27,148 @@ const MONO =
 const escape = (value) =>
   value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-/** 按视觉宽度估算文本像素宽度，用于居中与截断判断（CJK 按全宽计）。 */
-function measure(text, fontSize, mono = false) {
-  let units = 0;
-  for (const char of text) {
-    const code = char.codePointAt(0);
-    const wide =
-      code >= 0x1100 &&
-      (code <= 0x115f ||
-        (code >= 0x2e80 && code <= 0xa4cf) ||
-        (code >= 0xac00 && code <= 0xd7a3) ||
-        (code >= 0xf900 && code <= 0xfaff) ||
-        (code >= 0xfe30 && code <= 0xfe6f) ||
-        (code >= 0xff00 && code <= 0xff60) ||
-        (code >= 0xffe0 && code <= 0xffe6));
-    units += mono || wide ? 1 : 0.55;
-  }
-  return units * fontSize;
+/** 正六边形顶点（尖角朝上），比梯形更像能量核心而非容器。 */
+function hexagon(cx, cy, r) {
+  return Array.from({ length: 6 }, (_, i) => {
+    const angle = (Math.PI / 180) * (60 * i - 90);
+    return `${(cx + r * Math.cos(angle)).toFixed(1)},${(
+      cy + r * Math.sin(angle)
+    ).toFixed(1)}`;
+  }).join(' ');
 }
 
-/** 一行带边框的标签，宽度按文字自适应。 */
-function chip(text, x, y, { fontSize = 20, height = 40 } = {}) {
-  const width = measure(text, fontSize) + 32;
+/**
+ * 主视觉：代码字符带残影落入六边形能量核心。
+ * 越靠近核心越亮，边缘处被「吸收」——对应工具汇聚进同一个盒子。
+ */
+function coreVisual() {
+  // 上移并内收：外环 188 + 中心偏移后仍需与画布边距保持 30px 以上。
+  const cx = 866;
+  const cy = 424;
+  const core = 120;
+  const r1 = 146;
+  const r2 = 176;
+
+  // 下落中的字符：echo 为残影层数，op 随接近核心升高。
+  const falling = [
+    { g: '.*', x: 728, y: 216, op: 0.36, size: 25, echo: 3 },
+    { g: '</>', x: 790, y: 180, op: 0.42, size: 27, echo: 3 },
+    { g: '{ }', x: 856, y: 222, op: 0.5, size: 31, echo: 3 },
+    { g: '#', x: 924, y: 186, op: 0.46, size: 33, echo: 3 },
+    { g: '01', x: 988, y: 220, op: 0.38, size: 25, echo: 3 },
+  ];
+
+  // 已被核心收录的字符。
+  const absorbed = [
+    { g: '=', x: 834, y: 394, op: 0.4, size: 24 },
+    { g: '>', x: 798, y: 434, op: 0.72, size: 28 },
+    { g: '+', x: 884, y: 470, op: 0.88, size: 31 },
+    { g: '|', x: 942, y: 424, op: 0.58, size: 26 },
+    { g: '<', x: 852, y: 502, op: 0.44, size: 26 },
+  ];
+
+  // 残影：同一字符向上叠印若干层，透明度递减，模拟高速下落。
+  const echoText = (item) => {
+    const layers = Array.from({ length: item.echo }, (_, i) => {
+      const step = i + 1;
+      return `      <text x="${item.x}" y="${item.y - step * 17}" fill="${tokens.primary}"
+        font-family="${MONO}" font-size="${item.size}" text-anchor="middle"
+        dominant-baseline="central" opacity="${(item.op * 0.3) / step}">${escape(item.g)}</text>`;
+    });
+
+    return layers.join('\n');
+  };
+
+  const text = (item) =>
+    `    <text x="${item.x}" y="${item.y}" fill="${tokens.primary}"
+      font-family="${MONO}" font-size="${item.size}" text-anchor="middle"
+      dominant-baseline="central" opacity="${item.op}">${escape(item.g)}</text>`;
+
+  // 正在穿过核心上沿的一枚，静止画面里速度感的主要来源。
+  const crossing = `    <text x="866" y="300" fill="${tokens.textPrimary}"
+      font-family="${MONO}" font-size="32" text-anchor="middle"
+      dominant-baseline="central" opacity="0.95">{}</text>`;
+
   return {
-    node: `<g>
-      <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="${height / 2}"
-        fill="${tokens.surface}" stroke="${tokens.border}"/>
-      <text x="${x + width / 2}" y="${y + height / 2}" fill="${tokens.textSecondary}"
-        font-family="${FONT}" font-size="${fontSize}" text-anchor="middle"
-        dominant-baseline="central">${escape(text)}</text>
+    glow: `<ellipse cx="${cx}" cy="${cy}" rx="280" ry="235" fill="url(#coreGlow)"/>`,
+    rings: [
+      `    <polygon points="${hexagon(cx, cy, r2)}" fill="none"
+        stroke="${tokens.primary}" stroke-width="1" opacity="0.16" stroke-dasharray="7 11"/>`,
+      `    <polygon points="${hexagon(cx, cy, r1)}" fill="none"
+        stroke="${tokens.primary}" stroke-width="1.5" opacity="0.32"/>`,
+    ].join('\n'),
+    core: `    <polygon points="${hexagon(cx, cy, core)}" fill="url(#coreFill)"
+      stroke="${tokens.primary}" stroke-width="2.5" stroke-linejoin="round"/>`,
+    // 内圈装饰：细线连成网格，暗示「工具已被编目」。
+    mesh: `    <g stroke="${tokens.primary}" stroke-width="1" opacity="0.14">
+      <line x1="${cx - 60}" y1="${cy - 30}" x2="${cx + 60}" y2="${cy - 30}"/>
+      <line x1="${cx - 73}" y1="${cy + 18}" x2="${cx + 73}" y2="${cy + 18}"/>
+      <line x1="${cx - 43}" y1="${cy + 64}" x2="${cx + 43}" y2="${cy + 64}"/>
     </g>`,
-    width,
+    echoes: falling.map(echoText).join('\n'),
+    falling: falling.map(text).join('\n'),
+    absorbed: absorbed.map(text).join('\n'),
+    crossing,
   };
 }
 
+/** 左下角的电路走线，填补去掉标签后的留白，同时强化科技基调。 */
+function circuitTraces() {
+  const paths = [
+    'M 80 520 L 188 520 L 214 546 L 322 546',
+    'M 80 470 L 156 470 L 182 444 L 268 444',
+    'M 80 566 L 214 566 L 240 592 L 336 592',
+  ];
+  const vias = [
+    [214, 546],
+    [182, 444],
+    [240, 592],
+  ];
+
+  // 压得比主视觉低一档：走线是背景肌理，不该与六边形争夺注意力。
+  const lines = paths
+    .map(
+      (d) =>
+        `    <path d="${d}" fill="none" stroke="${tokens.borderStrong}"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.32"/>`,
+    )
+    .join('\n');
+  const dots = vias
+    .map(
+      ([x, y]) =>
+        `    <circle cx="${x}" cy="${y}" r="3" fill="${tokens.primary}" opacity="0.32"/>`,
+    )
+    .join('\n');
+
+  return `${lines}\n${dots}`;
+}
+
+/** 四角 HUD 括号，框住画面。 */
+function hudFrame() {
+  const size = 26;
+  const inset = 26;
+  const corners = [
+    [inset, inset, 1, 1],
+    [WIDTH - inset, inset, -1, 1],
+    [inset, HEIGHT - inset, 1, -1],
+    [WIDTH - inset, HEIGHT - inset, -1, -1],
+  ];
+
+  return corners
+    .map(([x, y, sx, sy]) => {
+      const x2 = x + size * sx;
+      const y2 = y + size * sy;
+
+      return `    <path d="M ${x2} ${y} L ${x} ${y} L ${x} ${y2}" fill="none"
+      stroke="${tokens.primary}" stroke-width="2" stroke-linecap="round" opacity="0.45"/>`;
+    })
+    .join('\n');
+}
+
 function buildSvg(logoDataUri) {
-  const groups = ['代码', '数据', 'JavaScript', 'JSON', '文本', '工具箱'];
-  const chips = [];
-  let cursorX = 80;
-  // 移除数量描述与快捷键提示后，分类标签是最后一块内容。
-  // 上移至与副标题保持 92px 间距，使上下留白接近均衡。
-  const chipY = 426;
-  for (const label of groups) {
-    const { node, width } = chip(label, cursorX, chipY);
-    chips.push(node);
-    cursorX += width + 12;
-  }
+  const core = coreVisual();
+  const traces = circuitTraces();
+  const hud = hudFrame();
 
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
      width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}">
@@ -93,9 +189,27 @@ function buildSvg(logoDataUri) {
     <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
       <path d="M40 0H0V40" fill="none" stroke="${tokens.border}" stroke-width="1" opacity="0.32"/>
     </pattern>
+    <pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="1" fill="#ffffff" opacity="0.025"/>
+    </pattern>
     <linearGradient id="rule" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0%" stop-color="${tokens.brand}" stop-opacity="0.9"/>
       <stop offset="100%" stop-color="${tokens.brand}" stop-opacity="0"/>
+    </linearGradient>
+    <!-- userSpaceOnUse：核心区固定在 (866,424)，绝对坐标才能对齐六边形。 -->
+    <linearGradient id="coreFill" x1="0" y1="304" x2="0" y2="544" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1e2431"/>
+      <stop offset="100%" stop-color="#10131a"/>
+    </linearGradient>
+    <radialGradient id="coreGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="${tokens.primary}" stop-opacity="0.3"/>
+      <stop offset="70%" stop-color="${tokens.primary}" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="${tokens.primary}" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="lip" x1="700" y1="0" x2="1080" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="${tokens.primary}" stop-opacity="0.2"/>
+      <stop offset="50%" stop-color="${tokens.primary}" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="${tokens.primary}" stop-opacity="0.2"/>
     </linearGradient>
   </defs>
 
@@ -120,7 +234,26 @@ function buildSvg(logoDataUri) {
   <text x="80" y="334" fill="${tokens.textSecondary}" font-family="${FONT}"
     font-size="24">输入内容仅在浏览器内处理，不上传服务端，无需登录</text>
 
-  ${chips.join('\n  ')}
+  <g>
+    ${core.glow}
+${core.rings}
+${core.core}
+${core.mesh}
+${core.absorbed}
+${core.crossing}
+${core.echoes}
+${core.falling}
+  </g>
+
+  <g>
+${traces}
+  </g>
+
+  <g>
+${hud}
+  </g>
+
+  <rect width="${WIDTH}" height="${HEIGHT}" fill="url(#scan)" pointer-events="none"/>
 </svg>`;
 }
 
