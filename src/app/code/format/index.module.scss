@@ -19,10 +19,7 @@
   display: grid;
   place-items: center;
   border-radius: 8px;
-  color: var(--editor-loading);
   background: var(--editor-background);
-  font-family: var(--font-mono);
-  font-size: 12px;
 }
 
 @media (max-width: 720px) {

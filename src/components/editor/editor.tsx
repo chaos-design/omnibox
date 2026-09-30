@@ -1,12 +1,12 @@
 'use client';
 
 import MonacoEditor, {
-  loader,
   DiffEditor as MonacoDiffEditor,
   type DiffEditorProps as MonacoDiffEditorProps,
   type EditorProps as MonacoEditorProps,
   type OnMount,
 } from '@monaco-editor/react';
+import { usePathname } from 'next/navigation';
 import {
   forwardRef,
   type Ref,
@@ -17,19 +17,16 @@ import {
   useRef,
 } from 'react';
 
+// 导入本模块即注册 monaco 的自托管 paths（顶层副作用），
+// 必须早于任何 loader.init()。app-shell 的预热走同一条路径。
+import '../../utils/monaco/loader';
+import { Loading } from '../loading';
 import { useTheme } from '../theme';
 
 import s from './index.module.scss';
+import { modelPath } from './model-path';
 
 export { useMonaco } from '@monaco-editor/react';
-
-// 自托管 monaco：资源由 scripts/sync-monaco.mjs 从 node_modules 复制到 public/monaco。
-// 走 CDN 会在弱网下长时间白屏，且加载版本与依赖版本不一致。
-const monacoBasePath = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/monaco/vs`;
-
-if (typeof window !== 'undefined') {
-  loader.config({ paths: { vs: monacoBasePath } });
-}
 
 export type EditorInstance = Parameters<OnMount>[0];
 
@@ -45,12 +42,22 @@ export interface EditorHandle {
 export interface EditorProps
   extends Omit<
     MonacoEditorProps,
-    'defaultLanguage' | 'language' | 'onChange' | 'onMount'
+    | 'defaultLanguage'
+    | 'keepCurrentModel'
+    | 'language'
+    | 'onChange'
+    | 'onMount'
+    | 'path'
   > {
   className?: string;
   language?: string;
   onChange?: (value: string) => void;
   onMount?: (editor: EditorInstance) => void;
+  /**
+   * 同页多个编辑器时区分 model 缓存槽位。缺省用 0。
+   * 见 modelPath：path 决定 model 是否复用。
+   */
+  modelKey?: number | string;
 }
 
 const defaultOptions: MonacoEditorProps['options'] = {
@@ -68,6 +75,7 @@ function EditorComponent(
   {
     className,
     language = 'json',
+    modelKey = 0,
     onChange,
     onMount,
     options,
@@ -77,9 +85,11 @@ function EditorComponent(
   ref: Ref<EditorHandle>,
 ) {
   const { theme } = useTheme();
+  const pathname = usePathname();
   const editorRef = useRef<EditorInstance | null>(null);
   const resolvedEditorTheme =
     editorTheme ?? (theme === 'dark' ? 'vs-dark' : 'light');
+  const path = modelPath(pathname, modelKey);
   // options 必须是稳定引用。@monaco-editor/react 内部用
   // `useUpdate(() => editor.updateOptions(options), [options])`，
   // 每次渲染传入新对象都会触发一次 updateOptions —— 而它在 monaco 内部
@@ -133,9 +143,15 @@ function EditorComponent(
     <div className={[s.editorContainer, className].filter(Boolean).join(' ')}>
       <MonacoEditor
         height="100%"
+        keepCurrentModel
         language={language}
-        loading={<div className={s.editorLoading}>正在加载编辑器...</div>}
+        loading={
+          <div className={s.editorLoading}>
+            <Loading label="正在加载编辑器" />
+          </div>
+        }
         options={mergedOptions}
+        path={path}
         theme={resolvedEditorTheme}
         {...editorProps}
         onChange={handleChange}
@@ -148,8 +164,10 @@ function EditorComponent(
 export const Editor = forwardRef(EditorComponent);
 Editor.displayName = 'Editor';
 
-export interface DiffEditorProps extends MonacoDiffEditorProps {
+export interface DiffEditorProps
+  extends Omit<MonacoDiffEditorProps, 'keepCurrentModel' | 'path'> {
   className?: string;
+  modelKey?: number | string;
 }
 
 const defaultDiffOptions: MonacoDiffEditorProps['options'] = {
@@ -163,26 +181,38 @@ const defaultDiffOptions: MonacoDiffEditorProps['options'] = {
 
 export function DiffEditor({
   className,
+  modelKey = 0,
   language = 'json',
   options,
   theme: editorTheme,
   ...editorProps
 }: DiffEditorProps) {
   const { theme } = useTheme();
+  const pathname = usePathname();
   const resolvedEditorTheme =
     editorTheme ?? (theme === 'dark' ? 'vs-dark' : 'light');
   const mergedOptions = useMemo(
     () => ({ ...defaultDiffOptions, ...options }),
     [options],
   );
+  const path = modelPath(pathname, modelKey);
 
   return (
     <div className={[s.editorContainer, className].filter(Boolean).join(' ')}>
       <MonacoDiffEditor
         height="100%"
+        // 左右两侧是两个独立 model，各自都要 keep，否则回退时重新分词。
+        keepCurrentModifiedModel
+        keepCurrentOriginalModel
         language={language}
-        loading={<div className={s.editorLoading}>正在加载对比编辑器...</div>}
+        loading={
+          <div className={s.editorLoading}>
+            <Loading label="正在加载对比编辑器" />
+          </div>
+        }
+        modifiedModelPath={`${path}/modified`}
         options={mergedOptions}
+        originalModelPath={`${path}/original`}
         theme={resolvedEditorTheme}
         {...editorProps}
       />

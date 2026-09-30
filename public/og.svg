@@ -44,59 +44,46 @@
   <text x="80" y="334" fill="#c4cbd6" font-family="PingFang SC, Hiragino Sans GB, Heiti SC, Helvetica Neue, Helvetica, Arial, sans-serif"
     font-size="24">输入内容仅在浏览器内处理，不上传服务端，无需登录</text>
 
-  <g transform="translate(80, 380)">
-    <circle cx="6" cy="6" r="6" fill="#d81e06"/>
-    <text x="24" y="13" fill="#c4cbd6" font-family="PingFang SC, Hiragino Sans GB, Heiti SC, Helvetica Neue, Helvetica, Arial, sans-serif"
-      font-size="21">28 个工具 · 6 大分类 · 172 个单元测试</text>
-  </g>
-
   <g>
-      <rect x="80" y="486" width="72" height="40" rx="20"
+      <rect x="80" y="426" width="72" height="40" rx="20"
         fill="#171a21" stroke="#2c323d"/>
-      <text x="116" y="506" fill="#c4cbd6"
+      <text x="116" y="446" fill="#c4cbd6"
         font-family="PingFang SC, Hiragino Sans GB, Heiti SC, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="20" text-anchor="middle"
         dominant-baseline="central">代码</text>
     </g>
   <g>
-      <rect x="164" y="486" width="72" height="40" rx="20"
+      <rect x="164" y="426" width="72" height="40" rx="20"
         fill="#171a21" stroke="#2c323d"/>
-      <text x="200" y="506" fill="#c4cbd6"
+      <text x="200" y="446" fill="#c4cbd6"
         font-family="PingFang SC, Hiragino Sans GB, Heiti SC, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="20" text-anchor="middle"
         dominant-baseline="central">数据</text>
     </g>
   <g>
-      <rect x="248" y="486" width="142" height="40" rx="20"
+      <rect x="248" y="426" width="142" height="40" rx="20"
         fill="#171a21" stroke="#2c323d"/>
-      <text x="319" y="506" fill="#c4cbd6"
+      <text x="319" y="446" fill="#c4cbd6"
         font-family="PingFang SC, Hiragino Sans GB, Heiti SC, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="20" text-anchor="middle"
         dominant-baseline="central">JavaScript</text>
     </g>
   <g>
-      <rect x="402" y="486" width="76" height="40" rx="20"
+      <rect x="402" y="426" width="76" height="40" rx="20"
         fill="#171a21" stroke="#2c323d"/>
-      <text x="440" y="506" fill="#c4cbd6"
+      <text x="440" y="446" fill="#c4cbd6"
         font-family="PingFang SC, Hiragino Sans GB, Heiti SC, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="20" text-anchor="middle"
         dominant-baseline="central">JSON</text>
     </g>
   <g>
-      <rect x="490" y="486" width="72" height="40" rx="20"
+      <rect x="490" y="426" width="72" height="40" rx="20"
         fill="#171a21" stroke="#2c323d"/>
-      <text x="526" y="506" fill="#c4cbd6"
+      <text x="526" y="446" fill="#c4cbd6"
         font-family="PingFang SC, Hiragino Sans GB, Heiti SC, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="20" text-anchor="middle"
         dominant-baseline="central">文本</text>
     </g>
   <g>
-      <rect x="574" y="486" width="92" height="40" rx="20"
+      <rect x="574" y="426" width="92" height="40" rx="20"
         fill="#171a21" stroke="#2c323d"/>
-      <text x="620" y="506" fill="#c4cbd6"
+      <text x="620" y="446" fill="#c4cbd6"
         font-family="PingFang SC, Hiragino Sans GB, Heiti SC, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="20" text-anchor="middle"
         dominant-baseline="central">工具箱</text>
     </g>
-
-  <g transform="translate(80, 556)">
-    <rect x="0" y="-13" width="16" height="16" rx="4"
-      fill="none" stroke="#3b4350" stroke-width="1.5"/>
-    <text x="32" y="1" fill="#8b95a5" font-family="SF Mono, SFMono-Regular, Menlo, Consolas, Liberation Mono, monospace"
-      font-size="17">Cmd/Ctrl + K 唤起全局工具搜索</text>
-  </g>
 </svg>

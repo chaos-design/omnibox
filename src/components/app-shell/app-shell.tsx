@@ -15,6 +15,7 @@ import {
   type PropsWithChildren,
   type SVGProps,
   useCallback,
+  useEffect,
   useState,
   useSyncExternalStore,
 } from 'react';
@@ -22,6 +23,8 @@ import {
 import chaosLogo from '../../../public/chaos.png';
 import { cn } from '../../lib/utils';
 import { menu } from '../../utils/menu';
+// 副作用导入：注册 monaco 的自托管 paths，必须早于任何 loader.init()。
+import { preloadMonaco } from '../../utils/monaco/loader';
 import { storageStringifyParseValue } from '../../utils/storage/menu';
 import { Footer } from '../footer';
 import { useTheme } from '../theme';
@@ -247,6 +250,12 @@ function ShellContent({ children }: PropsWithChildren) {
   const { theme, toggleTheme } = useTheme();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const closeDrawer = useCallback(() => setDrawerOpen(false), []);
+
+  // 空转到预热 monaco 运行时。放在壳里而不是编辑器组件里，
+  // 是为了让它在用户还没点进任何带编辑器的工具时就开始下载。
+  useEffect(() => {
+    preloadMonaco();
+  }, []);
 
   return (
     <div className={s.app}>

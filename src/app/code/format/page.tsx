@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 import type { EditorHandle } from '../../../components/editor';
+import { Loading } from '../../../components/loading';
 import { Toolbar } from '../../../components/toolbar';
 import { Button } from '../../../components/ui/button';
 import { Spinner } from '../../../components/ui/spinner';
@@ -17,7 +18,11 @@ const Editor = dynamic(
   () =>
     import('../../../components/editor/editor').then((module) => module.Editor),
   {
-    loading: () => <div className={s.loading}>正在加载编辑器...</div>,
+    loading: () => (
+      <div className={s.loading}>
+        <Loading label="正在加载编辑器" />
+      </div>
+    ),
     ssr: false,
   },
 );

@@ -29,6 +29,7 @@
   --popover-foreground: #172033;
   --primary: #2563eb;
   --primary-foreground: #ffffff;
+  --primary-glow: rgb(37 99 235 / 14%);
   --radius: 0.5rem;
   --ring: #2563eb;
   --scrollbar-thumb: #c4c9d2;
@@ -74,6 +75,7 @@
   --popover-foreground: #f4f7fb;
   --primary: #60a5fa;
   --primary-foreground: #08111f;
+  --primary-glow: rgb(96 165 250 / 20%);
   --ring: #60a5fa;
   --scrollbar-thumb: #4a5361;
   --secondary: #242a34;

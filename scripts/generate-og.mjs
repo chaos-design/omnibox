@@ -65,7 +65,9 @@ function buildSvg(logoDataUri) {
   const groups = ['代码', '数据', 'JavaScript', 'JSON', '文本', '工具箱'];
   const chips = [];
   let cursorX = 80;
-  const chipY = 486;
+  // 移除数量描述与快捷键提示后，分类标签是最后一块内容。
+  // 上移至与副标题保持 92px 间距，使上下留白接近均衡。
+  const chipY = 426;
   for (const label of groups) {
     const { node, width } = chip(label, cursorX, chipY);
     chips.push(node);
@@ -118,20 +120,7 @@ function buildSvg(logoDataUri) {
   <text x="80" y="334" fill="${tokens.textSecondary}" font-family="${FONT}"
     font-size="24">输入内容仅在浏览器内处理，不上传服务端，无需登录</text>
 
-  <g transform="translate(80, 380)">
-    <circle cx="6" cy="6" r="6" fill="${tokens.brand}"/>
-    <text x="24" y="13" fill="${tokens.textSecondary}" font-family="${FONT}"
-      font-size="21">28 个工具 · 6 大分类 · 172 个单元测试</text>
-  </g>
-
   ${chips.join('\n  ')}
-
-  <g transform="translate(80, 556)">
-    <rect x="0" y="-13" width="16" height="16" rx="4"
-      fill="none" stroke="${tokens.borderStrong}" stroke-width="1.5"/>
-    <text x="32" y="1" fill="${tokens.textTertiary}" font-family="${MONO}"
-      font-size="17">Cmd/Ctrl + K 唤起全局工具搜索</text>
-  </g>
 </svg>`;
 }
 

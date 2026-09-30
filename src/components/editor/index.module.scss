@@ -14,8 +14,8 @@
 }
 
 .editorLoading {
-  color: var(--editor-loading);
-  font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: 0.02em;
+  display: grid;
+  height: 100%;
+  place-items: center;
+  background: var(--editor-background);
 }

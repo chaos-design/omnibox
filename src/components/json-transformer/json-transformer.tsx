@@ -21,6 +21,7 @@ import {
   json2Schema,
   parseJSON,
 } from '../../utils/tools/json';
+import { Loading } from '../loading';
 import { Alert, AlertAction, AlertDescription, AlertTitle } from '../ui/alert';
 import { Button } from '../ui/button';
 import {
@@ -42,7 +43,11 @@ import s from './index.module.scss';
 const Editor = dynamic(
   () => import('../editor/editor').then((module) => module.Editor),
   {
-    loading: () => <div className={s.loading}>正在加载编辑器...</div>,
+    loading: () => (
+      <div className={s.loading}>
+        <Loading label="正在加载编辑器" />
+      </div>
+    ),
     ssr: false,
   },
 );
@@ -325,7 +330,12 @@ export function JsonTransformer({ mode }: JsonTransformerProps) {
             </div>
           </div>
           <div className={s.editor}>
-            <Editor language="json" onChange={updateSource} value={source} />
+            <Editor
+              language="json"
+              modelKey="input"
+              onChange={updateSource}
+              value={source}
+            />
           </div>
         </div>
 
@@ -353,6 +363,7 @@ export function JsonTransformer({ mode }: JsonTransformerProps) {
           <div className={s.editor}>
             <Editor
               language={config.outputLanguage}
+              modelKey="output"
               options={{ readOnly: true }}
               value={output}
             />

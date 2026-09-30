@@ -29,8 +29,11 @@
   min-height: 200px;
   flex: 1;
   place-items: center;
-  color: var(--text-tertiary);
-  font-size: 12px;
+}
+
+// sheet 内的编辑器加载态空间有限，整体缩到 0.7。
+.compact {
+  transform: scale(0.7);
 }
 
 .editorHint {
@@ -390,8 +393,6 @@
   display: grid;
   height: 100%;
   place-items: center;
-  color: var(--editor-loading);
-  font-size: 12px;
 }
 
 /* 代码抽屉：中等宽度，比 data 抽屉窄，避免遮挡过多内容区 */
@@ -441,8 +442,6 @@
   display: grid;
   height: 100%;
   place-items: center;
-  color: var(--editor-loading);
-  font-size: 12px;
 }
 
 @media (max-width: 560px) {

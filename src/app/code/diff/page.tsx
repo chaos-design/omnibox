@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 
+import { Loading } from '../../../components/loading';
 import { Toolbar } from '../../../components/toolbar';
 
 import s from './index.module.scss';
@@ -13,7 +14,11 @@ const DiffEditor = dynamic(
       (module) => module.DiffEditor,
     ),
   {
-    loading: () => <div className={s.loading}>正在加载对比编辑器...</div>,
+    loading: () => (
+      <div className={s.loading}>
+        <Loading label="正在加载对比编辑器" />
+      </div>
+    ),
     ssr: false,
   },
 );

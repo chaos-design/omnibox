@@ -44,6 +44,7 @@ import {
   TabsList,
   TabsTrigger,
 } from '../../../components/ui/tabs';
+import { Loading } from '../../../components/loading';
 import { copyToClipboard } from '../../../utils/tools/copy';
 import {
   buildSseClientCode,
@@ -59,7 +60,11 @@ import { registerSseLanguage, SSE_LANGUAGE_ID } from './sse-language';
 const Editor = dynamic(
   () => import('../../../components/editor').then((module) => module.Editor),
   {
-    loading: () => <div className={s.editorLoading}>正在加载编辑器...</div>,
+    loading: () => (
+      <div className={s.editorLoading}>
+        <Loading label="正在加载编辑器" />
+      </div>
+    ),
     ssr: false,
   },
 );
@@ -160,7 +165,12 @@ function PayloadBlock({
           <div className={s.fullPayload}>
             <Editor
               language={payloadLanguage(frame, partial)}
-              loading={<div className={s.fullPayloadLoading}>正在加载...</div>}
+              loading={
+                <div className={s.fullPayloadLoading}>
+                  <Loading className={s.compact} label="正在加载数据帧" />
+                </div>
+              }
+              modelKey="frame"
               options={{
                 fontSize: 13,
                 minimap: { enabled: false },
@@ -431,6 +441,7 @@ export default function SsePreviewPage() {
             <Editor
               beforeMount={beforeMount}
               language={SSE_LANGUAGE_ID}
+              modelKey="stream"
               onChange={(value) => {
                 setStream(value);
                 setActiveFrame(null);
@@ -644,7 +655,15 @@ export default function SsePreviewPage() {
                 <TabsContent key={type} value={type}>
                   <Editor
                     language={type !== 'curl' ? 'javascript' : 'shell'}
-                    loading={<div className={s.codeLoading}>正在加载...</div>}
+                    loading={
+                      <div className={s.codeLoading}>
+                        <Loading
+                          className={s.compact}
+                          label="正在加载客户端代码"
+                        />
+                      </div>
+                    }
+                    modelKey={`code/${type}`}
                     options={{
                       fontSize: 12,
                       lineNumbersMinChars: 3,

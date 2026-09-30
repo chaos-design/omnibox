@@ -32,6 +32,7 @@ import {
 } from 'react';
 import { toast } from 'sonner';
 
+import { Loading } from '../../../components/loading';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { Separator } from '../../../components/ui/separator';
@@ -52,7 +53,11 @@ const Editor = dynamic(
   () =>
     import('../../../components/editor/editor').then((module) => module.Editor),
   {
-    loading: () => <div className={s.loading}>正在加载 JSON 编辑器...</div>,
+    loading: () => (
+      <div className={s.loading}>
+        <Loading label="正在加载 JSON 编辑器" />
+      </div>
+    ),
     ssr: false,
   },
 );
